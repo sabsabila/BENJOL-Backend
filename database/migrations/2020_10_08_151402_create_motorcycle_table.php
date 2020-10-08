@@ -17,6 +17,7 @@ class CreateMotorcycleTable extends Migration
             $table->integer('motorcycle_id', true);
             $table->string('brand');
             $table->string('plate_number');
+            $table->integer('user_id')->index('usermotor_fk_id');
         });
     }
 
