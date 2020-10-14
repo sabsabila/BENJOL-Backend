@@ -14,7 +14,7 @@ class AddForeignKeysToSparepartsTable extends Migration
     public function up()
     {
         Schema::table('spareparts', function (Blueprint $table) {
-            $table->foreign('bengkel_id', 'bengkel_id_fk')->references('bengkel_id')->on('bengkels')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('bengkel_id', 'sparepart_bengkel_id_fk')->references('bengkel_id')->on('bengkels')->onUpdate('RESTRICT')->onDelete('RESTRICT');
         });
     }
 
@@ -26,7 +26,7 @@ class AddForeignKeysToSparepartsTable extends Migration
     public function down()
     {
         Schema::table('spareparts', function (Blueprint $table) {
-            $table->dropForeign('bengkel_id_fk');
+            $table->dropForeign('sparepart_bengkel_id_fk');
         });
     }
 }
