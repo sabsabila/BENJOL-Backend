@@ -14,7 +14,7 @@ class AddForeignKeysToMotorcyclesTable extends Migration
     public function up()
     {
         Schema::table('motorcycles', function (Blueprint $table) {
-            $table->foreign('user_id', 'usermotor_fk_id')->references('user_id')->on('user')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('user_id', 'motorycycle_user_id_fk')->references('user_id')->on('users')->onUpdate('RESTRICT')->onDelete('RESTRICT');
         });
     }
 
@@ -26,7 +26,7 @@ class AddForeignKeysToMotorcyclesTable extends Migration
     public function down()
     {
         Schema::table('motorcycles', function (Blueprint $table) {
-            $table->dropForeign('usermotor_fk_id');
+            $table->dropForeign('motorycycle_user_id_fk');
         });
     }
 }

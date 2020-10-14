@@ -14,8 +14,8 @@ class AddForeignKeysToBookingDetailsTable extends Migration
     public function up()
     {
         Schema::table('booking_details', function (Blueprint $table) {
-            $table->foreign('booking_id', 'bookingdet_id_fk')->references('booking_id')->on('bookings')->onUpdate('RESTRICT')->onDelete('RESTRICT');
-            $table->foreign('service_id', 'service_id_fk')->references('service_id')->on('services')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('booking_id', 'booking_detail_booking_id_fk')->references('booking_id')->on('bookings')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('service_id', 'booking_detail_service_id_fk')->references('service_id')->on('services')->onUpdate('RESTRICT')->onDelete('RESTRICT');
         });
     }
 
@@ -27,8 +27,8 @@ class AddForeignKeysToBookingDetailsTable extends Migration
     public function down()
     {
         Schema::table('booking_details', function (Blueprint $table) {
-            $table->dropForeign('bookingdet_id_fk');
-            $table->dropForeign('service_id_fk');
+            $table->dropForeign('booking_detail_booking_id_fk');
+            $table->dropForeign('booking_detail_service_id_fk');
         });
     }
 }
