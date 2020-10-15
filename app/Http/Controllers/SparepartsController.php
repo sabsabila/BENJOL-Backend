@@ -86,6 +86,8 @@ class SparepartController extends Controller
         $sparepart->bengkel_id = $request->bengkel_id;
         $sparepart->price = $request->price;
         $sparepart->stock = $request->stock;
+        $sparepart->created_at = $request->created_at;
+        $sparepart->updated_at = $request->updated_at;
         $sparepart->save();
 
         return "Sparepart Updated!";
