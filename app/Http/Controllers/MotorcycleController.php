@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Motorcycle;
 use Illuminate\Http\Request;
+use App\Models\Motorcycle;
 
 class MotorcycleController extends Controller
 {
@@ -22,6 +22,11 @@ class MotorcycleController extends Controller
         if ($motorcycle->save()) {
             echo "Data Successfully Added";
         }
+    }
+
+    public function show($id)
+    {
+        return Motorcycle::find($id);
     }
 
     public function update(Request $request, $id)

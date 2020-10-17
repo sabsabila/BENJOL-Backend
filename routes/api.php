@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BengkelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,13 +20,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('bengkel', BengkelController::class);
 Route::get('bengkel', 'BengkelController@index');
-Route::post('bengkel', 'BengkelController@create');
-Route::get('/bengkel/{id}', 'BengkelController@detail');
+Route::post('bengkel', 'BengkelController@store');
+Route::get('/bengkel/{id}', 'BengkelController@show');
 Route::put('/bengkel/{id}', 'BengkelController@update');
-Route::delete('/bengkel/{id}', 'BengkelController@delete');
+Route::delete('/bengkel/{id}', 'BengkelController@destroy');
 
 Route::resource('motorcycle', MotorcycleController::class);
 Route::get('motorcycle', 'MotorcycleController@index');
 Route::post('motorcycle', 'MotorcycleController@store');
+Route::get('/motorcycle/{id}', 'MotorcycleController@show');
 Route::put('/motorcycle/{id}', 'MotorcycleController@update');
 Route::delete('/motorcycle/{id}', 'MotorcycleController@destroy');

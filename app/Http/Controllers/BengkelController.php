@@ -8,36 +8,47 @@ use App\Models\Bengkel;
 class BengkelController extends Controller
 {
     public function index() {
-        $bengkel = Bengkel::all();
-
-        $data = ['bengkel' => $bengkel];
-
-        return $data;
+        return Bengkel::all();
     }
 
-    public function create(Request $request) {
-        $bengkel = new Bengkel();
+    public function store(Request $request) {
+        $bengkel = new Bengkel;
         $bengkel->account_id = $request->account_id;
         $bengkel->name = $request->name;
         $bengkel->address = $request->address;
-        $bengkel->save();
 
-        return " Data Saved ";
+        if ($bengkel->save()) {
+            echo "Data Successfully Added";
+        }
+    }
+
+    public function show($id)
+    {
+        return Bengkel::find($id);
     }
 
     public function update(Request $request, $id) {
         $bengkel = Bengkel::find($id);
-        $bengkel->account_id = $request->account_id;
-        $bengkel->name = $request->name;
-        $bengkel->address = $request->address;
-        $bengkel->save();
 
-        return " Data Updated ";
+        if ($request->account_id != null)
+            $bengkel->account_id = $request->account_id;
+        
+        if ($request->name != null)
+            $bengkel->name = $request->name;
+
+        if ($request->address != null)
+            $bengkel->address = $request->address;
+        
+        if ($bengkel->save()) {
+            echo "Data Successfully Updated";
+        }
     }
 
     public function delete($id) {
         $bengkel = Bengkel::find($id);
         
-        return $bengkel;
+        if ($bengkel->delete()) {
+            echo "Bengkel with id " . (int) $id . " successfully deleted";
+        }
     }
 }

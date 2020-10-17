@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bengkel extends Model
 {
+    protected $primaryKey = 'bengkel_id';
+
     use HasFactory;
 }
