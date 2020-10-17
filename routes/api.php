@@ -31,3 +31,10 @@ Route::post('motorcycle', 'MotorcycleController@store');
 Route::get('/motorcycle/{id}', 'MotorcycleController@show');
 Route::put('/motorcycle/{id}', 'MotorcycleController@update');
 Route::delete('/motorcycle/{id}', 'MotorcycleController@destroy');
+
+Route::resource('payment', PaymentController::class);
+Route::get('payment', 'PaymentController@index');
+Route::post('payment', 'PaymentController@store');
+Route::get('/payment/{id}', 'PaymentController@show');
+Route::put('/payment/{id}', 'PaymentController@update');
+Route::delete('/payment/{id}', 'PaymentController@destroy');
