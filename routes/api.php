@@ -25,3 +25,9 @@ Route::post('bengkel', 'BengkelController@create');
 Route::get('/bengkel/{id}', 'BengkelController@detail');
 Route::put('/bengkel/{id}', 'BengkelController@update');
 Route::delete('/bengkel/{id}', 'BengkelController@delete');
+
+Route::resource('motorcycle', MotorcycleController::class);
+Route::get('motorcycle', 'MotorcycleController@index');
+Route::post('motorcycle', 'MotorcycleController@store');
+Route::put('/motorcycle/{id}', 'MotorcycleController@update');
+Route::delete('/motorcycle/{id}', 'MotorcycleController@destroy');
