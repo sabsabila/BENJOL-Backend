@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\App;
 
 class ServiceController extends Controller
 {
+
+    public function getBookingDetail($id){
+        return Service::find($id)->getBookingDetail;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +20,9 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        return Service::all();
+        $service= Service::all();
+        // return view('service',['services'=>$service]);
+        return $service;
     }
 
     /**
@@ -52,7 +59,7 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
-        //
+        return Service::find($id);
     }
 
     /**
