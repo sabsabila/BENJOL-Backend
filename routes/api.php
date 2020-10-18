@@ -18,8 +18,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::resource('sparepart', SparepartController::class);
 Route::get('sparepart', 'SparepartController@index');
 Route::post('sparepart', 'SparepartController@store');
 Route::get('/sparepart/{id}', 'SparepartController@show');
-Route::put('sparepart/{id}', 'SparepartController@update');
-Route::delete('sparepart/{id}', 'SparepartController@destroy');
+Route::put('/sparepart/{id}', 'SparepartController@update');
+Route::delete('/sparepart/{id}', 'SparepartController@destroy');
