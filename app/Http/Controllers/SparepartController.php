@@ -7,12 +7,6 @@ use Illuminate\Http\Request;
 
 class SparepartController extends Controller
 {
-
-    public function bengkel()
-    {
-        return $this->belongsTo('App\Models\Bengkel');
-    }
-
     /**
      * Display a listing of the resource.
      *
