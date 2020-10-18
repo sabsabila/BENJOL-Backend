@@ -24,3 +24,9 @@ Route::post('payment', 'PaymentController@store');
 Route::get('/payment/{id}', 'PaymentController@show');
 Route::put('/payment/{id}', 'PaymentController@update');
 Route::delete('/payment/{id}', 'PaymentController@destroy');
+
+Route::resource('sparepart', SparepartController::class);
+Route::get('sparepart', 'SparepartController@index');
+Route::post('sparepart', 'SparepartController@store');
+Route::get('/sparepart/{id}', 'SparepartController@show');
+Route::put('/sparepart/{id}', 'SparepartController@update');
