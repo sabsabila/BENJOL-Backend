@@ -65,7 +65,7 @@ class AccountController extends Controller
         return "data updated successfully";
     }
 
-    public function delete(){
+    public function destroy(){
         $account = Auth::account();
         $account->delete();
 

@@ -24,13 +24,13 @@ Route::post('login', 'App\Http\Controllers\API\AccountController@login');
 Route::post('register', 'App\Http\Controllers\API\AccountController@register');
 
 Route::group(['middleware' => 'auth:api'], function(){
-    Route::get('user/detail', 'App\Http\Controllers\Api\AccountController@details');
+    Route::get('account/detail', 'App\Http\Controllers\Api\AccountController@details');
     Route::post('logout', 'App\Http\Controllers\Api\AccountController@logout');
     
-    Route::put('editAcc', 'App\Http\Controllers\API\AccountController@update');
-    Route::delete('deleteAcc', 'App\Http\Controllers\API\AccountController@delete');
+    Route::put('account', 'App\Http\Controllers\API\AccountController@update');
+    Route::delete('account', 'App\Http\Controllers\API\AccountController@destroy');
 
-    Route::post('addUser', 'App\Http\Controllers\API\UserController@create');
-    Route::put('editUser', 'App\Http\Controllers\API\UserController@update');
-    Route::delete('deleteUser', 'App\Http\Controllers\API\UserController@delete');
+    Route::post('user', 'App\Http\Controllers\API\UserController@store');
+    Route::put('user', 'App\Http\Controllers\API\UserController@update');
+    Route::delete('user', 'App\Http\Controllers\API\UserController@destroy');
 }); 

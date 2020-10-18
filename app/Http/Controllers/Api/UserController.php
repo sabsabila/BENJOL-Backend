@@ -14,7 +14,22 @@ class UserController extends Controller
         return User::all();
     }
 
-    public function create(Request $request){
+    public function create()
+    {
+        
+    }
+
+    public function show($id)
+    {
+        //
+    }
+
+    public function edit($id)
+    {
+        //
+    }
+
+    public function store(Request $request){
         $user = new User;
         $account = auth('api')->account();
 
@@ -53,7 +68,7 @@ class UserController extends Controller
         return "data updated successfully";
     }
 
-    public function delete(){
+    public function destroy(){
         $user = User::where('account_id', auth('api')->account()->id)->delete();
         //$user->delete();
 
