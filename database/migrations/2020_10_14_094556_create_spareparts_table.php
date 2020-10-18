@@ -16,6 +16,7 @@ class CreateSparepartsTable extends Migration
         Schema::create('spareparts', function (Blueprint $table) {
             $table->integer('sparepart_id', true);
             $table->integer('bengkel_id')->index('bengkel_id_fk');
+            $table->string('name');
             $table->integer('price');
             $table->integer('stock');
             $table->timestamps();
