@@ -20,7 +20,7 @@ class SparepartController extends Controller
      */
     public function index()
     {
-        return Payment::all();
+        return Sparepart::all();
     }
 
     /**
