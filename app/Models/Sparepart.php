@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Sparepart extends Model
 {
     protected $primaryKey = 'sparepart_id';
-
     use HasFactory;
+
+    public function bengkel()
+    {
+        return $this->belongsTo('App\Models\Bengkel');
+    }
+
 }
