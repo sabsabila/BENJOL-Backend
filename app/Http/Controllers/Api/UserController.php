@@ -49,22 +49,28 @@ class UserController extends Controller
         $last_name = $request->last_name;
         $gender = $request->gender;
         $birth_date = $request->birth_date;
-        //$account = auth('api')->account();
+        $user = auth('api')->account()->user;
 
-        //$user = Account::find($account->id)->user;
-        $user = User::where('account_id', auth('api')->account()->id)->update([
+        /*$user = User::where('account_id', auth('api')->account()->id)->update([
             'first_name' => $first_name,
             'last_name' => $last_name,
             'gender' => $gender,
             'birth_date' => $birth_date,
-            ]);
-        //User::where('account_id', auth('api')->account()->id)->firstOrFail();
-        //$user->first_name = $first_name;
-        //$user->last_name = $last_name;
-        //$user->gender = $gender;
-        //$user->birth_date = $birth_date;
-        //$user->save();
+            ]);*/
+        
+        if($request->first_name != null)
+            $user->first_name = $request->first_name;
+        
+        if($request->last_name != null)
+            $user->last_name = $request->last_name;
 
+        if($request->gender != null)
+            $user->gender = $request->gender;
+
+        if($request->birth_date != null)
+            $user->birth_date = $request->birth_date;
+
+        $user->save();
         return "data updated successfully";
     }
 
