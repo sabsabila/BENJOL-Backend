@@ -9,4 +9,8 @@ class Pickup extends Model
 {
     protected $primaryKey='pickup_id';
     use HasFactory;
+
+    public function getBooking(){
+        return $this->hasOne('App\Models\Booking');
+    }
 }
