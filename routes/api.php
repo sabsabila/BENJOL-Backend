@@ -54,11 +54,11 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //otak atik motorcycle
         Route::resource('motorcycle', MotorcycleController::class);
-        Route::get('motorcycle', 'MotorcycleController@index');
+        Route::get('motorcycleList', 'MotorcycleController@index');
         Route::post('motorcycle', 'MotorcycleController@store');
-        Route::get('/motorcycle/{id}', 'MotorcycleController@show');
-        Route::put('/motorcycle/{id}', 'MotorcycleController@update');
-        Route::delete('/motorcycle/{id}', 'MotorcycleController@destroy');
+        Route::get('motorcycle', 'MotorcycleController@show');
+        Route::put('motorcycle/{id}', 'MotorcycleController@update');
+        Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
     });
 
     // buat bengkel

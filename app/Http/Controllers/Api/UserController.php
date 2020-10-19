@@ -50,13 +50,6 @@ class UserController extends Controller
         $gender = $request->gender;
         $birth_date = $request->birth_date;
         $user = auth('api')->account()->user;
-
-        /*$user = User::where('account_id', auth('api')->account()->id)->update([
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'gender' => $gender,
-            'birth_date' => $birth_date,
-            ]);*/
         
         if($request->first_name != null)
             $user->first_name = $request->first_name;

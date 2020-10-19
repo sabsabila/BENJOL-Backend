@@ -44,11 +44,11 @@ class BengkelController extends Controller
         }
     }
 
-    public function delete($id) {
+    public function delete() {
         $bengkel = auth('api')->account()->bengkel;
         
         if ($bengkel->delete()) {
-            echo "Bengkel with id " . (int) $id . " successfully deleted";
+            echo "successfully deleted";
         }
     }
 }
