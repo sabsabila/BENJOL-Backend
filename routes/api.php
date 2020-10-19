@@ -20,5 +20,3 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('service',ServiceController::class);
 Route::resource('pickup',PickupController::class);
-Route::get('showService','ServiceController@index');
-Route::put('updateService/{id}','ServiceController@update');
