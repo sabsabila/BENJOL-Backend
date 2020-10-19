@@ -19,9 +19,9 @@ class UserController extends Controller
         
     }
 
-    public function show($id)
+    public function show()
     {
-        //
+        return auth('api')->account()->user;
     }
 
     public function edit($id)

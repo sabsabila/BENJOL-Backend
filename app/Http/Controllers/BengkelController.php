@@ -22,13 +22,13 @@ class BengkelController extends Controller
         }
     }
 
-    public function show($id)
+    public function show()
     {
-        return Bengkel::find($id);
+        return auth('api')->account()->bengkel;
     }
 
-    public function update(Request $request, $id) {
-        $bengkel = Bengkel::find($id);
+    public function update(Request $request) {
+        $bengkel = auth('api')->account()->bengkel;
 
         if ($request->account_id != null)
             $bengkel->account_id = $request->account_id;
@@ -45,7 +45,7 @@ class BengkelController extends Controller
     }
 
     public function delete($id) {
-        $bengkel = Bengkel::find($id);
+        $bengkel = auth('api')->account()->bengkel;
         
         if ($bengkel->delete()) {
             echo "Bengkel with id " . (int) $id . " successfully deleted";

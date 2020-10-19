@@ -41,10 +41,10 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
     // buat user & bengkel
     Route::middleware(['scope:user,bengkel'])->group(function () {
-        Route::get('account/detail', 'Api\AccountController@details');
+        Route::get('account', 'Api\AccountController@details');
         Route::post('logout', 'Api\AccountController@logout');
         
-        Route::get('account', 'API\AccountController@index');
+        Route::get('accountList', 'API\AccountController@index');
         Route::put('account', 'API\AccountController@update');
         Route::delete('account', 'API\AccountController@destroy');
 
@@ -52,8 +52,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
     // buat user 
     Route::middleware(['scope:user'])->group(function () {
-        Route::get('user', 'API\UserController@index');
-        Route::post('user', 'API\UserController@store');
+        Route::get('userList', 'API\UserController@index');
+        //Route::post('user', 'API\UserController@store');
+        Route::get('user', 'API\UserController@show');
         Route::put('user', 'API\UserController@update');
         Route::delete('user', 'API\UserController@destroy');
     });
@@ -61,11 +62,11 @@ Route::middleware(['auth:api', 'role'])->group(function() {
     // buat bengkel
     Route::middleware(['scope:bengkel'])->group(function () {
         Route::resource('bengkel', BengkelController::class);
-        Route::get('bengkel', 'BengkelController@index');
-        Route::post('bengkel', 'BengkelController@store');
-        Route::get('/bengkel/{id}', 'BengkelController@show');
-        Route::put('/bengkel/{id}', 'BengkelController@update');
-        Route::delete('/bengkel/{id}', 'BengkelController@destroy');
+        Route::get('bengkelList', 'BengkelController@index');
+        //Route::post('bengkel', 'BengkelController@store');
+        Route::get('bengkel', 'BengkelController@show');
+        Route::put('bengkel', 'BengkelController@update');
+        Route::delete('bengkel', 'BengkelController@destroy');
 
     });
     
