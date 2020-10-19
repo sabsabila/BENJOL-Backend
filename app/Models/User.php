@@ -15,6 +15,11 @@ class User extends Model
 
     public function account()
     {
-        return $this->hasOne('App\Models\Account', 'id');
+        return $this->belongsTo('App\Models\Account', 'account_id', 'id');
+    }
+
+    public function motorcycle()
+    {
+        return $this->hasMany('App\Models\Motorcycle', 'user_id', 'user_id');
     }
 }
