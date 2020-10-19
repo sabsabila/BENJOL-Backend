@@ -10,4 +10,16 @@ class Bengkel extends Model
     protected $primaryKey = 'bengkel_id';
 
     use HasFactory;
+
+    public function account() {
+        return $this->belongsTo('App\Models\Account', "acount_id");
+    }
+
+    public function booking() {
+        return $this->hasMany('App\Models\Booking');
+    }
+
+    public function sparepart() {
+        return $this->hasMany('App\Models\Sparepart');
+    }
 }
