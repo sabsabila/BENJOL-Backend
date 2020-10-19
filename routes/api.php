@@ -38,3 +38,19 @@ Route::post('payment', 'PaymentController@store');
 Route::get('/payment/{id}', 'PaymentController@show');
 Route::put('/payment/{id}', 'PaymentController@update');
 Route::delete('/payment/{id}', 'PaymentController@destroy');
+Route::get('user', 'App\Http\Controllers\Api\UserController@index');
+Route::get('account', 'App\Http\Controllers\Api\AccountController@index');
+Route::post('login', 'App\Http\Controllers\API\AccountController@login');
+Route::post('register', 'App\Http\Controllers\API\AccountController@register');
+
+Route::group(['middleware' => 'auth:api'], function(){
+    Route::get('account/detail', 'App\Http\Controllers\Api\AccountController@details');
+    Route::post('logout', 'App\Http\Controllers\Api\AccountController@logout');
+    
+    Route::put('account', 'App\Http\Controllers\API\AccountController@update');
+    Route::delete('account', 'App\Http\Controllers\API\AccountController@destroy');
+
+    Route::post('user', 'App\Http\Controllers\API\UserController@store');
+    Route::put('user', 'App\Http\Controllers\API\UserController@update');
+    Route::delete('user', 'App\Http\Controllers\API\UserController@destroy');
+}); 
