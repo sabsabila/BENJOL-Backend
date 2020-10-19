@@ -19,6 +19,7 @@ class CreateSparepartsTable extends Migration
             $table->string('name');
             $table->integer('price');
             $table->integer('stock');
+            $table->string('picture')->nullable();
             $table->timestamps();
         });
     }
