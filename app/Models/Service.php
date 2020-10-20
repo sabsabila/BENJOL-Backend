@@ -9,4 +9,8 @@ class Service extends Model
 {
     protected $primaryKey ="service_id";
     use HasFactory;
+
+    function getBookingDetail(){
+        return $this->hasMany('App\Models\BookingDetail');
+    }
 }

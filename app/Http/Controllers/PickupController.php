@@ -52,7 +52,7 @@ class PickupController extends Controller
      */
     public function show($id)
     {
-        $pickup = Pickup::find($id);
+        $pickup = Pickup::find($id)->getBooking;
         return $pickup;
     }
 
