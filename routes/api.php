@@ -76,5 +76,10 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('/payment/{id}', 'PaymentController@update');
         Route::delete('/payment/{id}', 'PaymentController@destroy');
     });
-    
+
+    // buat service
+    Route::resource('service', ServiceController::class);
+
+    // buat pickup
+    Route::resource('pickup', PickupController::class);
 });
