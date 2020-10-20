@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PickupController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -83,7 +85,16 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //otak atik sparepart
         Route::post('sparepart', 'SparepartController@store');
         Route::put('/sparepart/{id}', 'SparepartController@update');
+        Route::delete('/sparepart/{id}', 'SparepartController@destroy');
     });
 
     
 });
+
+
+// Route Service
+Route::resource('service', ServiceController::class);
+
+
+// Route Pickup
+Route::resource('pickup', PickupController::class);

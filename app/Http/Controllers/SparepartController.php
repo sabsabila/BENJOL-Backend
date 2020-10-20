@@ -36,11 +36,14 @@ class SparepartController extends Controller
     public function store(Request $request)
     {
         $sparepart = new Sparepart();
-        $sparepart->bengkel_id = $request->bengkel_id;
+        $bengkel = auth('api')->account()->bengkel;
+        
+        $sparepart->bengkel_id = $bengkel->bengkel_id;
+        $sparepart->name = $request->name;
         $sparepart->price = $request->price;
         $sparepart->stock = $request->stock;
 
-        if ($payment->save()) {
+        if ($sparepart->save()) {
             echo "Data Successfully Added";
         }
     }
@@ -74,16 +77,15 @@ class SparepartController extends Controller
      * @param  \App\Models\Sparepart  $sparepart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sparepart $sparepart)
+    public function update(Request $request, $id)
     {
         $sparepart = Sparepart::find($id);
 
         if ($request->bengkel_id != null)
             $sparepart->bengkel_id = $request->bengkel_id;
 
-        if ($request->sparepart_name != null)
-            $sparepart->sparepart_name = $request->sparepart_name;
-
+        if ($request->name != null)
+            $sparepart->name = $request->name;
 
         if ($request->price != null)
             $sparepart->price = $request->price;
@@ -102,7 +104,7 @@ class SparepartController extends Controller
      * @param  \App\Models\Sparepart  $sparepart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sparepart $sparepart)
+    public function destroy($id)
     {
         $sparepart = Sparepart::find($id);
 
