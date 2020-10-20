@@ -40,6 +40,11 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::resource('payment', PaymentController::class);
         Route::get('payment', 'PaymentController@index');        
         Route::get('/payment/{id}', 'PaymentController@show');
+
+        //list sparepart
+        Route::resource('sparepart', SparepartController::class);
+        Route::get('sparepart', 'SparepartController@index');
+        Route::get('/sparepart/{id}', 'SparepartController@show');
     });
 
     // buat user 
@@ -74,19 +79,11 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('payment', 'PaymentController@store');
         Route::put('/payment/{id}', 'PaymentController@update');
         Route::delete('/payment/{id}', 'PaymentController@destroy');
-    });
-  
-    Route::resource('payment', PaymentController::class);
-    Route::get('payment', 'PaymentController@index');
-    Route::post('payment', 'PaymentController@store');
-    Route::get('/payment/{id}', 'PaymentController@show');
-    Route::put('/payment/{id}', 'PaymentController@update');
-    Route::delete('/payment/{id}', 'PaymentController@destroy');
 
-    Route::resource('sparepart', SparepartController::class);
-    Route::get('sparepart', 'SparepartController@index');
-    Route::post('sparepart', 'SparepartController@store');
-    Route::get('/sparepart/{id}', 'SparepartController@show');
-    Route::put('/sparepart/{id}', 'SparepartController@update');
+        //otak atik sparepart
+        Route::post('sparepart', 'SparepartController@store');
+        Route::put('/sparepart/{id}', 'SparepartController@update');
+    });
+
     
 });
