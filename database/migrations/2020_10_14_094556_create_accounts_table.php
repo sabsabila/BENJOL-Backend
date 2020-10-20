@@ -19,7 +19,8 @@ class CreateAccountsTable extends Migration
             $table->string('password');
             $table->string('email');
             $table->timestamp('email_verified_at')->useCurrent();
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
