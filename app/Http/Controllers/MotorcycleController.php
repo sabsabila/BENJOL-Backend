@@ -17,16 +17,16 @@ class MotorcycleController extends Controller
         $motorcycle = new Motorcycle;
         $motorcycle->brand = $request->brand;
         $motorcycle->plate_number = $request->plate_number;
-        $motorcycle->user_id = $request->user_id;
+        $motorcycle->user_id = auth('api')->account()->user->user_id;
 
         if ($motorcycle->save()) {
             echo "Data Successfully Added";
         }
     }
 
-    public function show($id)
+    public function show()
     {
-        return Motorcycle::find($id);
+        return auth('api')->account()->user->motorcycle;
     }
 
     public function update(Request $request, $id)
@@ -38,9 +38,6 @@ class MotorcycleController extends Controller
 
         if ($request->plate_number != null)
             $motorcycle->plate_number = $request->plate_number;
-
-        if ($request->user_id != null)
-            $motorcycle->user_id = $request->user_id;
         
         if ($motorcycle->save()) {
             echo "Data Successfully Updated";

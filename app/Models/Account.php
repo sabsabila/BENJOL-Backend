@@ -13,7 +13,12 @@ class Account extends Authenticatable
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->hasOne('App\Models\User', 'account_id', 'id');
+    }
+
+    public function bengkel()
+    {
+        return $this->hasOne('App\Models\Bengkel', 'account_id', 'id');
     }
 
     /**

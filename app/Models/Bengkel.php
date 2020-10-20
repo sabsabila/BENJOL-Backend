@@ -9,17 +9,24 @@ class Bengkel extends Model
 {
     protected $primaryKey = 'bengkel_id';
 
+    public $timestamps = false;
+
+    protected $hidden = ['created_at', 'updated_at'];
+    
     use HasFactory;
 
-    public function account() {
-        return $this->belongsTo('App\Models\Account', "acount_id");
+    public function account()
+    {
+        return $this->belongsTo('App\Models\Account', 'account_id', 'id');
     }
 
-    public function booking() {
-        return $this->hasMany('App\Models\Booking');
+    public function sparepart()
+    {
+        return $this->hasMany('App\Models\Sparepart', 'bengkel_id', 'bengkel_id');
     }
 
-    public function sparepart() {
-        return $this->hasMany('App\Models\Sparepart');
+    public function booking()
+    {
+        return $this->hasMany('App\Models\Booking', 'bengkel_id', 'bengkel_id');
     }
 }

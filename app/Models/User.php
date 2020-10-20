@@ -13,8 +13,15 @@ class User extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    protected $primaryKey = 'user_id';
+
     public function account()
     {
-        return $this->hasOne('App\Models\Account', 'id');
+        return $this->belongsTo('App\Models\Account', 'account_id', 'id');
+    }
+
+    public function motorcycle()
+    {
+        return $this->hasMany('App\Models\Motorcycle', 'user_id', 'user_id');
     }
 }
