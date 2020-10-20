@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\User;
+use App\Models\Bengkel;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 
@@ -16,18 +18,35 @@ class AccountController extends Controller
         return Account::all();
     }
 
-    public function login(){
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
-            $account = Auth::account();
-            $success['token'] =  $account->createToken('nApp')->accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
-        }
-        else{
-            return response()->json(['error'=>'Unauthorised'], 401);
+    public function login()
+    {
+        
+        if( Auth::attempt(['email'=>request('email'), 'password'=>request('password')]) ) {
+
+            $account = Auth::Account();
+            //$userRole = $user->role()->first();
+            
+            if($account->bengkel != null)
+                $userRole = 'bengkel';
+            else
+                $userRole = 'user';
+
+            if ($userRole) {
+                $this->scope = $userRole;
+            }
+
+            $token = $account->createToken($account->email.'-'.now(), [$this->scope]);
+
+            echo $userRole;
+
+            return response()->json([
+                'token' => $token->accessToken
+            ]);
+
         }
     }
 
-    public function register(Request $request)
+    public function registerUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required',
@@ -44,24 +63,58 @@ class AccountController extends Controller
         $account = Account::create($input);
         $success['token'] =  $account->createToken('nApp')->accessToken;
         $success['username'] =  $account->username;
+        $user = new User;
+        $user->account_id = $account->id;
+        $user->save();
+        //$account->user = $user;
+        //$account->save();
+        //echo $account->user->user_id;
+        return response()->json(['success'=>$success], $this->successStatus);
+    }
+
+    public function registerBengkel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);            
+        }
+
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        $account = Account::create($input);
+        $success['token'] =  $account->createToken('nApp')->accessToken;
+        $success['username'] =  $account->username;
+        $bengkel = new Bengkel;
+        $bengkel->account_id = $account->id;
+        $bengkel->name = $request->name;
+        $bengkel->address = $request->address;
+        $bengkel->save();
 
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
     public function update(Request $request)
     {
-        $username = $request->username;
-        $password = $request->password;
-        $email = $request->email;
-        $phone_number = $request->phone_number;
-
         $account = Auth::account();
-        $account->username = $username;
-        $account->password = $password;
-        $account->email = $email;
-        $account->phone_number = $phone_number;
-        $account->save();
 
+        if($request->username != null)
+            $account->username = $request->username;
+        
+        if($request->password != null)
+            $account->password = $request->password;
+
+        if($request->email != null)
+            $account->email = $request->email;
+
+        if($request->phone_number != null)
+            $account->phone_number = $request->phone_number;
+
+        $account->save();
         return "data updated successfully";
     }
 

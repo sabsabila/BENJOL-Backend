@@ -1,5 +1,7 @@
 <?php
-    
+
+use App\Http\Controllers\PickupController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,19 +23,81 @@ Route::resource('booking', BookingController::class);
 //Route::get('bookingDetail', BookingController::class);
 Route::get('bookingDetail/{bookingDetail}', 'BookingDetailController@show');
 
-/*Route::get('user', 'App\Http\Controllers\Api\UserController@index');
-Route::get('account', 'App\Http\Controllers\Api\AccountController@index');
-Route::post('login', 'App\Http\Controllers\API\AccountController@login');
-Route::post('register', 'App\Http\Controllers\API\AccountController@register');
+Route::post('login', 'API\AccountController@login');
+Route::post('registerUser', 'API\AccountController@registerUser');
+Route::post('registerBengkel', 'API\AccountController@registerBengkel');
 
-Route::group(['middleware' => 'auth:api'], function(){
-    Route::get('account/detail', 'App\Http\Controllers\Api\AccountController@details');
-    Route::post('logout', 'App\Http\Controllers\Api\AccountController@logout');
+//buat udah login
+Route::middleware(['auth:api', 'role'])->group(function() {
+
+    // buat user & bengkel
+    Route::middleware(['scope:user,bengkel'])->group(function () {
+        //account detail & logout
+        Route::get('account', 'Api\AccountController@details');
+        Route::post('logout', 'Api\AccountController@logout');
+        
+        //account list, edit & delete account
+        Route::get('accountList', 'API\AccountController@index');
+        Route::put('account', 'API\AccountController@update');
+        Route::delete('account', 'API\AccountController@destroy');
+
+        //read payment info
+        Route::resource('payment', PaymentController::class);
+        Route::get('payment', 'PaymentController@index');        
+        Route::get('/payment/{id}', 'PaymentController@show');
+
+        //list sparepart
+        Route::resource('sparepart', SparepartController::class);
+        Route::get('sparepart', 'SparepartController@index');
+        Route::get('/sparepart/{id}', 'SparepartController@show');
+    });
+
+    // buat user 
+    Route::middleware(['scope:user'])->group(function () {
+        //otak atik user
+        Route::get('userList', 'API\UserController@index');
+        //Route::post('user', 'API\UserController@store');
+        Route::get('user', 'API\UserController@show');
+        Route::put('user', 'API\UserController@update');
+        Route::delete('user', 'API\UserController@destroy');
+
+        //otak atik motorcycle
+        Route::resource('motorcycle', MotorcycleController::class);
+        Route::get('motorcycleList', 'MotorcycleController@index');
+        Route::post('motorcycle', 'MotorcycleController@store');
+        Route::get('motorcycle', 'MotorcycleController@show');
+        Route::put('motorcycle/{id}', 'MotorcycleController@update');
+        Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
+    });
+
+    // buat bengkel
+    Route::middleware(['scope:bengkel'])->group(function () {
+        //otak atik bengkel
+        Route::resource('bengkel', BengkelController::class);
+        Route::get('bengkelList', 'BengkelController@index');
+        //Route::post('bengkel', 'BengkelController@store');
+        Route::get('bengkel', 'BengkelController@show');
+        Route::put('bengkel', 'BengkelController@update');
+        Route::delete('bengkel', 'BengkelController@destroy');
+
+        //otak atik payment
+        Route::post('payment', 'PaymentController@store');
+        Route::put('/payment/{id}', 'PaymentController@update');
+        Route::delete('/payment/{id}', 'PaymentController@destroy');
+
+        //otak atik sparepart
+        Route::post('sparepart', 'SparepartController@store');
+        Route::put('/sparepart/{id}', 'SparepartController@update');
+        Route::delete('/sparepart/{id}', 'SparepartController@destroy');
+    });
+
     
-    Route::put('account', 'App\Http\Controllers\API\AccountController@update');
-    Route::delete('account', 'App\Http\Controllers\API\AccountController@destroy');
+});
 
-    Route::post('user', 'App\Http\Controllers\API\UserController@store');
-    Route::put('user', 'App\Http\Controllers\API\UserController@update');
-    Route::delete('user', 'App\Http\Controllers\API\UserController@destroy');
-}); */
+
+// Route Service
+Route::resource('service', ServiceController::class);
+
+
+// Route Pickup
+Route::resource('pickup', PickupController::class);
