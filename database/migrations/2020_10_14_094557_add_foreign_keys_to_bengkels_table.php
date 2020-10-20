@@ -14,7 +14,7 @@ class AddForeignKeysToBengkelsTable extends Migration
     public function up()
     {
         Schema::table('bengkels', function (Blueprint $table) {
-            $table->foreign('account_id', 'bengkel_account_id_fk')->references('id')->on('accounts')->onUpdate('RESTRICT')->onDelete('RESTRICT');
+            $table->foreign('account_id', 'bengkel_account_id_fk')->references('account_id')->on('accounts')->onUpdate('RESTRICT')->onDelete('RESTRICT');
         });
     }
 

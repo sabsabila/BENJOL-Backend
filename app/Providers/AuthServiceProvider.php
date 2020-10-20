@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Laravel\Passport\Passport;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -14,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 
     /**
@@ -26,16 +25,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes();
-
-        // Mandatory to define Scope
-        Passport::tokensCan([
-            'bengkel' => 'Access-bengkel',
-            'user' => 'Access-user',
-        ]);
-
-        Passport::setDefaultScope([
-            'user',
-        ]);
+        //
     }
 }
