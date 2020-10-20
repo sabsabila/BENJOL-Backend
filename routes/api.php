@@ -18,7 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::post('login', 'API\AccountController@login');
 Route::post('registerUser', 'API\AccountController@registerUser');
 Route::post('registerBengkel', 'API\AccountController@registerBengkel');
@@ -41,6 +40,11 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::resource('payment', PaymentController::class);
         Route::get('payment', 'PaymentController@index');        
         Route::get('/payment/{id}', 'PaymentController@show');
+
+        //list sparepart
+        Route::resource('sparepart', SparepartController::class);
+        Route::get('sparepart', 'SparepartController@index');
+        Route::get('/sparepart/{id}', 'SparepartController@show');
     });
 
     // buat user 
@@ -75,6 +79,10 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('payment', 'PaymentController@store');
         Route::put('/payment/{id}', 'PaymentController@update');
         Route::delete('/payment/{id}', 'PaymentController@destroy');
+
+        //otak atik sparepart
+        Route::post('sparepart', 'SparepartController@store');
+        Route::put('/sparepart/{id}', 'SparepartController@update');
     });
 
     // buat service
@@ -83,3 +91,5 @@ Route::middleware(['auth:api', 'role'])->group(function() {
     // buat pickup
     Route::resource('pickup', PickupController::class);
 });
+    
+

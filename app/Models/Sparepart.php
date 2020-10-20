@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class Sparepart extends Model
 {
-    protected $primaryKey = 'payment_id';
+    protected $primaryKey = 'sparepart_id';
     use HasFactory;
 
-    public function booking()
+    public function bengkel()
     {
-        return $this->hasMany('App\Models\Booking');
+        return $this->belongsTo('App\Models\Bengkel');
     }
+
 }
