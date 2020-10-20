@@ -83,6 +83,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //otak atik sparepart
         Route::post('sparepart', 'SparepartController@store');
         Route::put('/sparepart/{id}', 'SparepartController@update');
+        Route::delete('/sparepart/{id}', 'SparepartController@destroy');
     });
 
     
