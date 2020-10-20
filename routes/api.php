@@ -45,6 +45,11 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::resource('sparepart', SparepartController::class);
         Route::get('sparepart', 'SparepartController@index');
         Route::get('/sparepart/{id}', 'SparepartController@show');
+
+        //list motorcycle
+        Route::resource('motorcycle', MotorcycleController::class);
+        Route::get('motorcycleList', 'MotorcycleController@index');
+        Route::get('motorcycle', 'MotorcycleController@show');
     });
 
     // buat user 
@@ -57,10 +62,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::delete('user', 'API\UserController@destroy');
 
         //otak atik motorcycle
-        Route::resource('motorcycle', MotorcycleController::class);
-        Route::get('motorcycleList', 'MotorcycleController@index');
         Route::post('motorcycle', 'MotorcycleController@store');
-        Route::get('motorcycle', 'MotorcycleController@show');
         Route::put('motorcycle/{id}', 'MotorcycleController@update');
         Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
     });
