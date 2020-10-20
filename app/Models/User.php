@@ -32,15 +32,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $primaryKey = 'user_id';
-    public function account()
-
-    {
-        return $this->belongsTo('App\Models\Account', 'account_id', 'id');
-    }
-
-    public function motorcycle()
-    {
-        return $this->hasMany('App\Models\Motorcycle', 'user_id', 'user_id');
-    }
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }
