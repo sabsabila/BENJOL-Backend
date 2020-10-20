@@ -24,7 +24,17 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+        Passport::routes();
 
-        //
+        // Mandatory to define Scope
+        Passport::tokensCan([
+
+            'bengkel' => 'Access-bengkel',
+            'user' => 'Access-user',
+        ]);
+        Passport::setDefaultScope([
+
+            'user',
+        ]);
     }
 }
