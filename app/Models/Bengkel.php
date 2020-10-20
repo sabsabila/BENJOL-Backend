@@ -5,23 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Model
+class Bengkel extends Model
 {
-    use HasFactory;
+    protected $primaryKey = 'bengkel_id';
 
     public $timestamps = false;
 
     protected $hidden = ['created_at', 'updated_at'];
-
-    protected $primaryKey = 'user_id';
+    
+    use HasFactory;
 
     public function account()
     {
         return $this->belongsTo('App\Models\Account', 'account_id', 'id');
     }
 
-    public function motorcycle()
+    public function sparepart()
     {
-        return $this->hasMany('App\Models\Motorcycle', 'user_id', 'user_id');
+        return $this->hasMany('App\Models\Sparepart', 'bengkel_id', 'bengkel_id');
+    }
+
+    public function booking()
+    {
+        return $this->hasMany('App\Models\Booking', 'bengkel_id', 'bengkel_id');
     }
 }
