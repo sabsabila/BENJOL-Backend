@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::resource('booking', BookingController::class);
+//Route::get('bookingDetail', BookingController::class);
+Route::get('bookingDetail/{bookingDetail}', 'BookingDetailController@show');
 
-Route::get('user', 'App\Http\Controllers\Api\UserController@index');
+/*Route::get('user', 'App\Http\Controllers\Api\UserController@index');
 Route::get('account', 'App\Http\Controllers\Api\AccountController@index');
 Route::post('login', 'App\Http\Controllers\API\AccountController@login');
 Route::post('register', 'App\Http\Controllers\API\AccountController@register');
@@ -33,4 +36,4 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::post('user', 'App\Http\Controllers\API\UserController@store');
     Route::put('user', 'App\Http\Controllers\API\UserController@update');
     Route::delete('user', 'App\Http\Controllers\API\UserController@destroy');
-}); 
+}); */
