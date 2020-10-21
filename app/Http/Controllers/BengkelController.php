@@ -22,6 +22,13 @@ class BengkelController extends Controller
         }
     }
 
+    public function findByName(Request $request){
+        $name = $request->name;
+        $result = Bengkel::where('name', 'like', "%{$name}%")->get();
+
+        return $result;
+    }
+
     public function show()
     {
         return auth('api')->account()->bengkel;

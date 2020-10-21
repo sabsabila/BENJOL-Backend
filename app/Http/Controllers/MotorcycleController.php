@@ -29,6 +29,11 @@ class MotorcycleController extends Controller
         return auth('api')->account()->user->motorcycle;
     }
 
+    public function findById($id)
+    {
+        return Motorcycle::find($id);
+    }
+
     public function update(Request $request, $id)
     {
         $motorcycle = Motorcycle::find($id);
