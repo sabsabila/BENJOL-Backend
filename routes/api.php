@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\PickupController;
-use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::resource('booking', BookingController::class);
+//Route::get('bookingDetail', BookingController::class);
+Route::get('bookingDetail/{bookingDetail}', 'BookingDetailController@show');
 
 Route::post('login', 'API\AccountController@login');
 Route::post('registerUser', 'API\AccountController@registerUser');
@@ -63,6 +64,12 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('user', 'API\UserController@update');
         Route::delete('user', 'API\UserController@destroy');
 
+        // otak atik service
+        Route::get('service', 'ServiceController@index');
+
+        // otak atik pickup
+        Route::get('pickup', 'PickupController@index');
+
         //otak atik motorcycle
         Route::post('motorcycle', 'MotorcycleController@store');
         Route::put('motorcycle/{id}', 'MotorcycleController@update');
@@ -88,15 +95,17 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('sparepart', 'SparepartController@store');
         Route::put('/sparepart/{id}', 'SparepartController@update');
         Route::delete('/sparepart/{id}', 'SparepartController@destroy');
+
+        //otak atik service
+        Route::post('service', 'ServiceController@store');
+        Route::put('/service/{id}', 'ServiceController@update');
+        Route::delete('/service/{id}', 'ServiceController@delete');
+
+        // otak atik pickup
+        Route::post('pickup', 'PickupController@store');
+        Route::put('/pickup/{id}', 'PickupController@update');
+        Route::delete('/pickup/{id}', 'PickupController@delete');
     });
 
     
 });
-
-
-// Route Service
-Route::resource('service', ServiceController::class);
-
-
-// Route Pickup
-Route::resource('pickup', PickupController::class);
