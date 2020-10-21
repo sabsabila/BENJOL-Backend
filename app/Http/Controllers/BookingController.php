@@ -33,6 +33,11 @@ class BookingController extends Controller
         //
     }
 
+    public function show($id)
+    {
+        return Booking::find($id);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
