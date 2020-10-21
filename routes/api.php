@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::resource('booking', BookingController::class);
+//Route::get('bookingDetail', BookingController::class);
+Route::get('bookingDetail/{bookingDetail}', 'BookingDetailController@show');
 
 Route::post('login', 'API\AccountController@login');
 Route::post('registerUser', 'API\AccountController@registerUser');
