@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sparepart;
+use App\Models\Bengkel;
 use Illuminate\Http\Request;
 
 class SparepartController extends Controller
@@ -25,6 +26,29 @@ class SparepartController extends Controller
     public function create()
     {
         //
+    }
+
+    public function findByName(Request $request){
+        $name = $request->name;
+        $result = Sparepart::where('name', 'like', "%{$name}%")->get();
+
+        return $result;
+    }
+
+    public function findByBengkel($id){
+        $bengkel = Bengkel::find($id);
+        $result = $bengkel->sparepart;
+
+        return $result;
+    }
+
+    public function findByNameInBengkel(Request $request){
+        $bengkel = auth('api')->account()->bengkel;
+        $name = $request->name;
+        $result = Sparepart::where('name', 'like', "%{$name}%")
+                ->where('bengkel_id', $bengkel->bengkel_id)->get();
+
+        return $result;
     }
 
     /**
