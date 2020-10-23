@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sparepart;
+use App\Models\Bengkel;
 use Illuminate\Http\Request;
 
 class SparepartController extends Controller
@@ -27,6 +28,29 @@ class SparepartController extends Controller
         //
     }
 
+    public function findByName(Request $request){
+        $name = $request->name;
+        $result = Sparepart::where('name', 'like', "%{$name}%")->get();
+
+        return $result;
+    }
+
+    public function findByBengkel($id){
+        $bengkel = Bengkel::find($id);
+        $result = $bengkel->sparepart;
+
+        return $result;
+    }
+
+    public function findByNameInBengkel(Request $request){
+        $bengkel = auth('api')->account()->bengkel;
+        $name = $request->name;
+        $result = Sparepart::where('name', 'like', "%{$name}%")
+                ->where('bengkel_id', $bengkel->bengkel_id)->get();
+
+        return $result;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -36,11 +60,14 @@ class SparepartController extends Controller
     public function store(Request $request)
     {
         $sparepart = new Sparepart();
-        $sparepart->bengkel_id = $request->bengkel_id;
+        $bengkel = auth('api')->account()->bengkel;
+        
+        $sparepart->bengkel_id = $bengkel->bengkel_id;
+        $sparepart->name = $request->name;
         $sparepart->price = $request->price;
         $sparepart->stock = $request->stock;
 
-        if ($payment->save()) {
+        if ($sparepart->save()) {
             echo "Data Successfully Added";
         }
     }
@@ -74,16 +101,15 @@ class SparepartController extends Controller
      * @param  \App\Models\Sparepart  $sparepart
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sparepart $sparepart)
+    public function update(Request $request, $id)
     {
         $sparepart = Sparepart::find($id);
 
         if ($request->bengkel_id != null)
             $sparepart->bengkel_id = $request->bengkel_id;
 
-        if ($request->sparepart_name != null)
-            $sparepart->sparepart_name = $request->sparepart_name;
-
+        if ($request->name != null)
+            $sparepart->name = $request->name;
 
         if ($request->price != null)
             $sparepart->price = $request->price;
@@ -102,7 +128,7 @@ class SparepartController extends Controller
      * @param  \App\Models\Sparepart  $sparepart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sparepart $sparepart)
+    public function destroy($id)
     {
         $sparepart = Sparepart::find($id);
 
