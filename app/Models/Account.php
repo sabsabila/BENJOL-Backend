@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Account as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// use App\Models\Account;
 
 class Account extends Authenticatable
 {

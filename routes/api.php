@@ -55,6 +55,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //list motorcycle
         Route::get('motorcycleList', 'MotorcycleController@index');
         Route::get('motorcycle', 'MotorcycleController@show');
+
+        
+        
     });
 
     // buat user 
@@ -82,6 +85,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::get('/searchSparepart/{id}', 'SparepartController@findByBengkel');
         Route::get('bengkelList', 'BengkelController@index');
         Route::post('searchBengkel', 'BengkelController@findByName');
+
+        //checkprogress
+        Route::get('checkProgress','ProgressController@index');
     });
 
     // buat bengkel
@@ -119,3 +125,5 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
     
 });
+
+

@@ -12,7 +12,7 @@ use App\Models\Pickup;
 
 class BookingController extends Controller
 {
-    private BookingDetailController $bookingDetailController;
+    private $bookingDetailController;
     /**
      * Display a listing of the resource.
      *
@@ -46,19 +46,28 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth('api')->account()->user;
         $booking = new Booking();
+        $service = new Service();
+        $motorcycle = $user->motorcycle;
         $bookingDetailController = new BookingDetailController();
-        $booking->bengkel_id =$request->bengkel_id;
-        $booking->user_id =$request->user_id;
-        $booking->motorcycle_id =$request->motorcycle_id;
-        $booking->pickup_id =$request->pickup_id;
-        $booking->repairment_type = $request->repairment_type;
-        $booking->repairment_date = $request->repairment_date;
-        $booking->repairment_note = $request->repairment_note;
-        $booking->start_time = $request->start_time;
-        $booking->end_time = $request->end_time;
+        // $booking->bengkel_id =$bengkel->bengkel_id;
+        $booking->user_id =$user->user_id;
+        $booking->motorcycle_id =$motorcycle->motorcycle_id;
+        $isPickup = $request->isPickup;
+        if($isPickup == "Yes"){
+            $pickup = new Pickup();
+            $booking->pickup_id = $pickup->pickup_id;
+        }else{
+            $booking->pickup_id = null;
+        }
+        // $booking->repairment_type = $request->repairment_type;
+        // $booking->repairment_date = $request->repairment_date;
+        // $booking->repairment_note = $request->repairment_note;
+        // $booking->start_time = $request->start_time;
+        // $booking->end_time = $request->end_time;
         if ($booking->save()){
-            $bookingDetail = $bookingDetailController->store($booking->booking_id,$request->service_id);
+            $bookingDetail = $bookingDetailController->store($booking->booking_id,$service->service_id);
             return " Data Successfully Added ";
         }
     }

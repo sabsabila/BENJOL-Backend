@@ -2,24 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use Illuminate\Http\Request;
-use App\Models\Service;
-use Illuminate\Support\Facades\App;
 
-class ServiceController extends Controller
+class ProgressController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return Service::all();
+
+     
+    public function index(){
+        $data = [];
+        $user = auth('api')->account()->user;
+        $booking = $user->booking;
+        $motorcycle = $user->motorcycle;
+        $data[] =[
+            // $start_time = $user->start_time,
+            // $end_time = $user->end_time,
+            // $plate_number = $user->plate_number
+            $start_time = $booking->start_time,
+            $end_time = $booking->end_time,
+            $plate_number = $motorcycle->plate_number
+        ];
+
+        return response()->json($data);
     }
 
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -27,7 +38,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        
+        //
     }
 
     /**
@@ -38,12 +49,7 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        $service = new Service;
-        $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
-        if($service->save()){
-            echo "service data successfully added !";
-        }
+        //
     }
 
     /**
@@ -54,7 +60,7 @@ class ServiceController extends Controller
      */
     public function show($id)
     {
-        return Service::find($id)->getBookingDetail;
+        //
     }
 
     /**
@@ -77,12 +83,7 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $service = Service::find($id);
-        $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
-        if($service->save()){
-            echo "service data successfully updated !";
-        }
+        //
     }
 
     /**
@@ -93,10 +94,6 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        $service= Service::find($id);
-        // $service->delete();
-        if($service->delete()){
-            echo "service with id" .((int)$id). "has successfully removed.";
-        }
+        //
     }
 }
