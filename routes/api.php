@@ -20,7 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('booking','BookingController@index' );
 Route::get('booking/{id}','BookingController@show' );
-Route::post('booking','BookingController@store' );
 Route::put('booking/{id}','BookingController@update' );
 Route::delete('booking/{id}','BookingController@destroy');
 
@@ -54,9 +53,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //list motorcycle
         Route::get('motorcycleList', 'MotorcycleController@index');
-        Route::get('motorcycle', 'MotorcycleController@show');
-
-        
+        Route::get('motorcycle', 'MotorcycleController@show');  
         
     });
 
@@ -86,7 +83,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::get('bengkelList', 'BengkelController@index');
         Route::post('searchBengkel', 'BengkelController@findByName');
 
-        //checkprogress
+        //booking & checkprogress
+        Route::post('booking','BookingController@store' );
         Route::get('checkProgress','ProgressController@index');
     });
 

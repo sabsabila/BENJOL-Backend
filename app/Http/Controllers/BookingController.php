@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Service;
 use App\Models\BookingDetail;
 use App\Models\Bengkel;
 use App\Models\User;
@@ -49,11 +50,15 @@ class BookingController extends Controller
         $user = auth('api')->account()->user;
         $booking = new Booking();
         $service = new Service();
-        $motorcycle = $user->motorcycle;
+        $service->service_name = $request->service_name;
+        $service->cost = $request->cost;
+        $service->save();
+        $motorcycle_id = $request->motorcycle_id;
+        //$motorcycle = $user->motorcycle::Find($id);
         $bookingDetailController = new BookingDetailController();
         // $booking->bengkel_id =$bengkel->bengkel_id;
         $booking->user_id =$user->user_id;
-        $booking->motorcycle_id =$motorcycle->motorcycle_id;
+        $booking->motorcycle_id = $motorcycle_id;
         $isPickup = $request->isPickup;
         if($isPickup == "Yes"){
             $pickup = new Pickup();
@@ -61,11 +66,12 @@ class BookingController extends Controller
         }else{
             $booking->pickup_id = null;
         }
-        // $booking->repairment_type = $request->repairment_type;
-        // $booking->repairment_date = $request->repairment_date;
-        // $booking->repairment_note = $request->repairment_note;
-        // $booking->start_time = $request->start_time;
-        // $booking->end_time = $request->end_time;
+        $booking->bengkel_id = $request->bengkel_id;
+        $booking->repairment_type = $request->repairment_type;
+        $booking->repairment_date = $request->repairment_date;
+        $booking->repairment_note = $request->repairment_note;
+        $booking->start_time = $request->start_time;
+        $booking->end_time = $request->end_time;
         if ($booking->save()){
             $bookingDetail = $bookingDetailController->store($booking->booking_id,$service->service_id);
             return " Data Successfully Added ";

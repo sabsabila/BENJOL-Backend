@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class ProgressController extends Controller
 {
-    /**
+    /** 
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -16,8 +16,8 @@ class ProgressController extends Controller
     public function index(){
         $data = [];
         $user = auth('api')->account()->user;
-        $booking = $user->booking;
-        $motorcycle = $user->motorcycle;
+        $booking = $user->booking->first();
+        $motorcycle = $user->motorcycle->first();
         $data[] =[
             // $start_time = $user->start_time,
             // $end_time = $user->end_time,
