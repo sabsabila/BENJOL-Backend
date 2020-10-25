@@ -50,8 +50,6 @@ class BookingController extends Controller
         $user = auth('api')->account()->user;
         $booking = new Booking();
         $service = new Service();
-        $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
         $service->save();
         $motorcycle_id = $request->motorcycle_id;
         //$motorcycle = $user->motorcycle::Find($id);
@@ -62,6 +60,9 @@ class BookingController extends Controller
         $isPickup = $request->isPickup;
         if($isPickup == "Yes"){
             $pickup = new Pickup();
+            $pickup->pickup_location = $request->pickup_location;
+            $pickup->dropoff_location = $request->dropoff_location;
+            $pickup->save();
             $booking->pickup_id = $pickup->pickup_id;
         }else{
             $booking->pickup_id = null;
@@ -70,8 +71,8 @@ class BookingController extends Controller
         $booking->repairment_type = $request->repairment_type;
         $booking->repairment_date = $request->repairment_date;
         $booking->repairment_note = $request->repairment_note;
-        $booking->start_time = $request->start_time;
-        $booking->end_time = $request->end_time;
+        //$booking->start_time = $request->start_time;
+        //$booking->end_time = $request->end_time;
         if ($booking->save()){
             $bookingDetail = $bookingDetailController->store($booking->booking_id,$service->service_id);
             return " Data Successfully Added ";
@@ -107,13 +108,7 @@ class BookingController extends Controller
     public function update(Request $request, $id)
     {
         $booking = Booking::find($id);
-        $booking->bengkel_id =$request->bengkel_id;
-        $booking->user_id =$request->user_id;
-        $booking->motorcycle_id =$request->motorcycle_id;
-        $booking->pickup_id =$request->pickup_id;
-        $booking->repairment_type = $request->repairment_type;
-        $booking->repairment_date = $request->repairment_date;
-        $booking->repairment_note = $request->repairment_note;
+        
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
         if ($booking->save()){

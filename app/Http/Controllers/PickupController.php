@@ -38,7 +38,7 @@ class PickupController extends Controller
         $pickup = new Pickup;
         $pickup->pickup_location = $request->pickup_location;
         $pickup->dropoff_location = $request->dropoff_location;
-        $pickup->status = $request->status;
+        //$pickup->status = $request->status;
         if($pickup->save()){
             echo "Your Pickup data has successfully saved!";
         }
@@ -77,8 +77,6 @@ class PickupController extends Controller
     public function update(Request $request, $id)
     {
         $pickup = Pickup::find($id);
-        $pickup->pickup_location = $request->pickup_location;
-        $pickup->dropoff_location = $request->dropoff_location;
         $pickup->status = $request->status;
         if($pickup->save()){
             echo "Your Pickup data has successfully updated!";
