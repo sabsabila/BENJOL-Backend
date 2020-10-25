@@ -45,8 +45,6 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //Route::get('payment', 'PaymentController@index');        
         Route::get('/payment/{id}', 'PaymentController@show');
         
-        //booking
-        Route::get('booking/{id}','BookingController@show' );
     });
 
     // buat user 
@@ -71,13 +69,19 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //search
         Route::get('sparepart', 'SparepartController@index');
         Route::post('searchSparepart', 'SparepartController@findByName');
-        Route::get('/searchSparepart/{id}', 'SparepartController@findByBengkel');
+        Route::get('searchSparepart/{id}', 'SparepartController@findByBengkel');
         Route::get('bengkelList', 'BengkelController@index');
         Route::post('searchBengkel', 'BengkelController@findByName');
 
         //booking & checkprogress
         Route::post('booking','BookingController@store' );
         Route::get('checkProgress','ProgressController@index');
+
+        //lihat payment
+        //Route::get('payment', 'PaymentController@showMyPayment');
+
+        //lihat service
+        Route::get('service', 'ServiceController@show');
     });
 
     // buat bengkel
@@ -100,16 +104,15 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //otak atik service
         Route::put('/service/{id}', 'ServiceController@update');
-        Route::delete('/service/{id}', 'ServiceController@delete');
 
         // otak atik pickup
         Route::put('/pickup/{id}', 'PickupController@update');
-        Route::delete('/pickup/{id}', 'PickupController@delete');
 
         //search
         Route::get('motorcycle/{id}', 'MotorcycleController@findById');
 
         //booking
+        Route::get('myBooking','BookingController@showMyBooking' );
         Route::put('booking/{id}','BookingController@update' );
         Route::delete('booking/{id}','BookingController@destroy');
     });

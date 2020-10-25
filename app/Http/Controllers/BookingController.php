@@ -79,6 +79,11 @@ class BookingController extends Controller
         }
     }
 
+    public function showMyBooking(){
+        $bengkel = auth('api')->account()->bengkel;
+        return $bengkel->booking;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -125,6 +130,8 @@ class BookingController extends Controller
     public function destroy($id)
     {
         $booking = Booking::find($id);
+        $bookingDetail = BookingDetail::where('booking_id', $id);
+        $bookingDetail->delete();
         if ($booking->delete()){
             return "Booking with id " . (int) $id . " successfully deleted ";
         }
