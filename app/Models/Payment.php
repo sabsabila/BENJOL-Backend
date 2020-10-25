@@ -12,6 +12,6 @@ class Payment extends Model
 
     public function booking()
     {
-        return $this->hasMany('App\Models\Booking');
+        return $this->belongsTo('App\Models\Booking', 'booking_id', 'booking_id');
     }
 }

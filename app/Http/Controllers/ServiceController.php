@@ -52,9 +52,9 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        return Service::find($id)->getBookingDetail;
+        return auth('api')->account()->user->booking->first()->bookingDetail->first()->service->first();
     }
 
     /**
