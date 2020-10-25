@@ -17,7 +17,7 @@ class CreatePickupsTable extends Migration
             $table->integer('pickup_id', true);
             $table->string('pickup_location');
             $table->string('dropoff_location');
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

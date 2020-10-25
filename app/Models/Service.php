@@ -10,7 +10,7 @@ class Service extends Model
     protected $primaryKey ="service_id";
     use HasFactory;
 
-    function getBookingDetail(){
-        return $this->hasMany('App\Models\BookingDetail');
+    function bookingDetail(){
+        return $this->hasMany('App\Models\BookingDetail', 'service_id', 'service_id');
     }
 }

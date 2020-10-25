@@ -8,15 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
-{
-    use HasApiTokens, HasFactory, Notifiable;
-}
-
 class User extends Model
 {
-    use HasFactory;
-
+    use HasApiTokens, HasFactory, Notifiable;
     public $timestamps = false;
 
     protected $hidden = ['created_at', 'updated_at'];
@@ -31,5 +25,10 @@ class User extends Model
     public function motorcycle()
     {
         return $this->hasMany('App\Models\Motorcycle', 'user_id', 'user_id');
+    }
+
+    public function booking()
+    {
+        return $this->hasMany('App\Models\Booking', 'user_id', 'user_id');
     }
 }

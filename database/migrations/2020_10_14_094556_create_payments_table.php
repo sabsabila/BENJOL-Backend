@@ -17,7 +17,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('payment_id', true);
             $table->integer('booking_id')->index('booking_id_fk');
             $table->integer('total_price');
-            $table->string('receipt');
+            $table->string('receipt')->nullable();
             $table->timestamps();
         });
     }
