@@ -16,7 +16,7 @@ class Booking extends Model{
     }
 
     public function BookingDetail() {
-        return $this->hasMany('App\Models\BookingDetail');
+        return $this->hasMany('App\Models\BookingDetail', 'booking_id', 'booking_id');
     }
 
     public function Motorcycle() {
@@ -28,10 +28,10 @@ class Booking extends Model{
     }
 
     public function Payment() {
-        return $this->belongsTo('App\Models\Payment');
+        return $this->hasOne('App\Models\Payment', 'booking_id', 'booking_id');
     }
 
     public function Pickup() {
-        return $this->belongsTo('App\Models\Pickup');
+        return $this->hasOne('App\Models\Pickup');
     }
 }

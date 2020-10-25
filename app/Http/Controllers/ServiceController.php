@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use Illuminate\Support\Facades\App;
@@ -18,6 +19,7 @@ class ServiceController extends Controller
         return Service::all();
     }
 
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -50,9 +52,9 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        return Service::find($id)->getBookingDetail;
+        return auth('api')->account()->user->booking->first()->bookingDetail->first()->service->first();
     }
 
     /**
