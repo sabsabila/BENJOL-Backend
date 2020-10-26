@@ -10,6 +10,7 @@ use App\Models\Bengkel;
 use App\Models\User;
 use App\Models\Motorcycle;
 use App\Models\Pickup;
+use App\Models\Payment;
 
 class BookingController extends Controller
 {
@@ -131,6 +132,7 @@ class BookingController extends Controller
     {
         $booking = Booking::find($id);
         $bookingDetail = BookingDetail::where('booking_id', $id);
+        Payment::where('booking_id', $booking->booking_id)->delete();
         $bookingDetail->delete();
         if ($booking->delete()){
             return "Booking with id " . (int) $id . " successfully deleted ";
