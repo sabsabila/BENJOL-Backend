@@ -120,7 +120,11 @@ class AccountController extends Controller
 
     public function destroy(){
         $account = Auth::account();
-        $account->delete();
+        if($account->user != null){
+            $account->user->delete();
+        }else{
+            $account->bengkel->delete();
+        }$account->delete();
 
         return "data deleted successfully";
     }

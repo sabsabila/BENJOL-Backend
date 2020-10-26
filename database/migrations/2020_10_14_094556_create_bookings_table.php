@@ -20,8 +20,8 @@ class CreateBookingsTable extends Migration
             $table->integer('motorcycle_id')->index('motorcycle_id_fk');
             $table->string('repairment_type');
             $table->date('repairment_date');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->integer('pickup_id')->nullable()->index('pickup_id_fk');
             $table->string('repairment_note');
         });

@@ -14,10 +14,10 @@ class BookingDetail extends Model
     use HasFactory;
 
     public function Booking() {
-        return $this->belongsTo('App\Models\Booking');
+        return $this->belongsTo('App\Models\Booking', 'booking_id', 'booking_id');
     }
 
     public function Service() {
-        return $this->belongsTo('App\Models\Service');
+        return $this->belongsTo('App\Models\Service', 'service_id', 'service_id');
     }
 }

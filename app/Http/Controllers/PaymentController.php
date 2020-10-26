@@ -47,8 +47,13 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function show(Payment $payment)
+    public function showMyPayment()
     {
+        $booking = auth('api')->account()->user->booking->sortByDesc('booking_id')->first();
+        return $booking->payment;
+    }
+
+    public function show($id){
         return Payment::find($id);
     }
 
@@ -58,7 +63,7 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function edit(Payment $payment)
+    public function edit($id)
     {
         //
     }
@@ -70,7 +75,7 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Payment $payment)
+    public function update(Request $request, $id)
     {
         $payment = Payment::find($id);
 
@@ -94,7 +99,7 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Payment $payment)
+    public function destroy($id)
     {
         $payment = Payment::find($id);
 
