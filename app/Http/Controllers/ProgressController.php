@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Motorcycle;
 
 class ProgressController extends Controller
 {
@@ -16,8 +17,8 @@ class ProgressController extends Controller
     public function index(){
         $data = [];
         $user = auth('api')->account()->user;
-        $booking = $user->booking->first();
-        $motorcycle = $user->motorcycle->first();
+        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $motorcycle = Motorcycle::where('motorcycle_id', $booking->motorcycle_id)->first();
         $data[] =[
             // $start_time = $user->start_time,
             // $end_time = $user->end_time,
