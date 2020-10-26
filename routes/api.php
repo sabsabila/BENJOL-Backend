@@ -103,7 +103,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('searchMySparepart', 'SparepartController@findByNameInBengkel');
 
         //otak atik service
+        Route::post('service', 'ServiceController@store');
         Route::put('/service/{id}', 'ServiceController@update');
+        Route::delete('/service/{id}', 'ServiceController@destroy');
 
         // otak atik pickup
         Route::put('/pickup/{id}', 'PickupController@update');

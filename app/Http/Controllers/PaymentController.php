@@ -49,7 +49,7 @@ class PaymentController extends Controller
      */
     public function showMyPayment()
     {
-        $booking = auth('api')->account()->user->booking->first();
+        $booking = auth('api')->account()->user->booking->sortByDesc('booking_id')->first();
         return $booking->payment;
     }
 
