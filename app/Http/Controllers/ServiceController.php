@@ -69,10 +69,6 @@ class ServiceController extends Controller
         }
 
         return $items;
-
-        /*return auth('api')->account()->user->booking->sortByDesc('booking_id')->first()
-               ->bookingDetail->sortByDesc('booking_id')->first()
-               ->service->first();*/
     }
 
     /**
