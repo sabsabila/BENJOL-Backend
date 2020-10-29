@@ -16,7 +16,7 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->integer('payment_id', true);
             $table->integer('booking_id')->index('booking_id_fk');
-            $table->integer('total_price');
+            $table->string('status')->default('unpaid');;
             $table->string('receipt')->nullable();
             $table->timestamps();
         });
