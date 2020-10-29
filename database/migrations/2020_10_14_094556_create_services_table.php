@@ -15,8 +15,8 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->integer('service_id', true);
+            $table->integer('bengkel_id')->index('bengkel_id_fk');
             $table->string('service_name')->nullable();
-            $table->integer('cost')->nullable();
             $table->timestamps();
         });
     }

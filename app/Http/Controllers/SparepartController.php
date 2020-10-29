@@ -42,6 +42,13 @@ class SparepartController extends Controller
         return $result;
     }
 
+    public function mySparepartList(){
+        $bengkel = auth('api')->account()->bengkel;
+        $result = $bengkel->sparepart;
+
+        return $result;
+    }
+
     public function findByNameInBengkel(Request $request){
         $bengkel = auth('api')->account()->bengkel;
         $name = $request->name;
@@ -103,10 +110,7 @@ class SparepartController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $sparepart = Sparepart::find($id);
-
-        if ($request->bengkel_id != null)
-            $sparepart->bengkel_id = $request->bengkel_id;
+        $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
 
         if ($request->name != null)
             $sparepart->name = $request->name;
@@ -130,7 +134,7 @@ class SparepartController extends Controller
      */
     public function destroy($id)
     {
-        $sparepart = Sparepart::find($id);
+        $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
 
         if ($sparepart->delete()) {
             echo "Sparepart with id " . (int) $id . " successfully deleted";

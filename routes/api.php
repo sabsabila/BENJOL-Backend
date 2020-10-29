@@ -36,14 +36,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::get('account', 'Api\AccountController@details');
         Route::post('logout', 'Api\AccountController@logout');
         
-        //account list, edit & delete account
-        //Route::get('accountList', 'API\AccountController@index');
+        //edit & delete account
         Route::put('account', 'API\AccountController@update');
         Route::delete('account', 'API\AccountController@destroy');
-
-        //read payment info
-        //Route::get('payment', 'PaymentController@index');        
-        Route::get('/payment/{id}', 'PaymentController@show');
         
     });
 
@@ -53,12 +48,12 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::get('user', 'API\UserController@show');
         Route::put('user', 'API\UserController@update');
 
-        // otak atik service
-        //Route::get('service', 'ServiceController@index');
-
         // otak atik pickup
-        //Route::get('pickup', 'PickupController@index');
         Route::get('pickup/{id}', 'PickupController@show');
+
+        //otak atik payment
+        Route::put('uploadReceipt', 'PaymentController@updateReceipt');
+        Route::get('payment', 'PaymentController@showMyPayment');
 
         //otak atik motorcycle
         Route::get('motorcycle', 'MotorcycleController@show');
@@ -75,28 +70,28 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //booking & checkprogress
         Route::post('booking','BookingController@store' );
+        Route::get('booking','BookingController@userBooking');
         Route::get('checkProgress','ProgressController@index');
 
-        //lihat payment
-        //Route::get('payment', 'PaymentController@showMyPayment');
-
         //lihat service
-        Route::get('service', 'ServiceController@show');
+        Route::get('service/{id}', 'ServiceController@show');
+
+        //see booking detail
+        Route::get('bookingDetail','BookingDetailController@show');
     });
 
     // buat bengkel
     Route::middleware(['scope:bengkel'])->group(function () {
         //otak atik bengkel
-        //Route::post('bengkel', 'BengkelController@store');
         Route::get('bengkel', 'BengkelController@show');
         Route::put('bengkel', 'BengkelController@update');
 
         //otak atik payment
-        Route::post('payment', 'PaymentController@store');
-        Route::put('/payment/{id}', 'PaymentController@update');
-        Route::delete('/payment/{id}', 'PaymentController@destroy');
+        Route::put('/finishPayment/{id}', 'PaymentController@updateStatus');
+        Route::get('bengkelPayment', 'PaymentController@showBengkelPayment');
 
         //otak atik sparepart
+        Route::get('mySpareparts', 'SparepartController@mySparepartList');
         Route::post('sparepart', 'SparepartController@store');
         Route::put('/sparepart/{id}', 'SparepartController@update');
         Route::delete('/sparepart/{id}', 'SparepartController@destroy');
@@ -106,6 +101,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('service', 'ServiceController@store');
         Route::put('/service/{id}', 'ServiceController@update');
         Route::delete('/service/{id}', 'ServiceController@destroy');
+        Route::get('service', 'ServiceController@myServices');
 
         // otak atik pickup
         Route::put('/pickup/{id}', 'PickupController@update');
@@ -117,6 +113,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::get('myBooking','BookingController@showMyBooking' );
         Route::put('booking/{id}','BookingController@update' );
         Route::delete('booking/{id}','BookingController@destroy');
+        Route::put('bookingDetail/{id}','BookingDetailController@update');
+        Route::get('myBookingDetail','BookingController@showInBengkel');
     });
 
     
