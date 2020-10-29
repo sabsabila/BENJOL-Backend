@@ -40,14 +40,11 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $service = new Service;
-        $booking_id = $request->booking_id;
+        $service->bengkel_id = auth('api')->account()->bengkel->bengkel_id;
         $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
-        $bookingDetailController = new BookingDetailController();
-        
+
         if($service->save()){
             echo "service data successfully added !";
-            $bookingDetail = $bookingDetailController->store($booking_id,$service->service_id);
         }
     }
 
@@ -57,18 +54,20 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($bengkelId)
     {
-        $items = array();
-        $bookingDetails = auth('api')->account()
-                        ->user->booking->sortByDesc('booking_id')
-                        ->first()->bookingDetail;
+        $bengkel = Bengkel::find($bengkelId);
+        $services = $bengkel->service;
+        
+        return $services;
+    }
 
-        foreach($bookingDetails as $detail) {
-            $items[] = $detail->service;
-        }
-
-        return $items;
+    public function myServices()
+    {
+        $bengkel = auth('api')->account()->bengkel;
+        $services = $bengkel->service;
+        
+        return $services;
     }
 
     /**
@@ -91,9 +90,8 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $service = Service::find($id);
+        $service = Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
         if($service->save()){
             echo "service data successfully updated !";
         }
@@ -107,9 +105,7 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        $service= Service::find($id);
-        $bookingDetail = BookingDetail::where('booking_id', $id);
-        $bookingDetail->delete();
+        $service= Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         if($service->delete()){
             echo "service with id " .((int)$id). " has successfully removed.";
         }
