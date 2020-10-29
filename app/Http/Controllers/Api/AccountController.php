@@ -43,6 +43,8 @@ class AccountController extends Controller
                 'token' => $token->accessToken
             ]);
 
+        }else{
+            return "Wrong email or password !";
         }
     }
 
