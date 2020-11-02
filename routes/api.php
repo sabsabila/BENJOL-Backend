@@ -18,10 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Route::get('booking','BookingController@index' );
+Route::get('bengkelList', 'BengkelController@index');
+Route::post('searchBengkel', 'BengkelController@findByName');
 
-
-//Route::get('bookingDetail/{bookingDetail}', 'BookingDetailController@show');
+Route::get('sparepart', 'SparepartController@index');
+Route::post('searchSparepart', 'SparepartController@findByName');
 
 Route::post('login', 'API\AccountController@login');
 Route::post('registerUser', 'API\AccountController@registerUser');
@@ -62,11 +63,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
 
         //search
-        Route::get('sparepart', 'SparepartController@index');
-        Route::post('searchSparepart', 'SparepartController@findByName');
         Route::get('searchSparepart/{id}', 'SparepartController@findByBengkel');
-        Route::get('bengkelList', 'BengkelController@index');
-        Route::post('searchBengkel', 'BengkelController@findByName');
 
         //booking & checkprogress
         Route::post('booking','BookingController@store' );
