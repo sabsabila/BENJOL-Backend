@@ -10,7 +10,7 @@ class BengkelController extends Controller
 {
     public function index() {
         $bengkels = DB::table('bengkels')
-        ->select('bengkels.*','accounts.phone_number')
+        ->select('bengkels.*','accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'bengkels.account_id', 'accounts.id')->get();
 
         return $bengkels;
@@ -30,7 +30,7 @@ class BengkelController extends Controller
     public function findByName(Request $request){
         $name = $request->name;
         $bengkels = DB::table('bengkels')
-        ->select('bengkels.*','accounts.phone_number')
+        ->select('bengkels.*','accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'bengkels.account_id', 'accounts.id')
         ->where('bengkels.name', 'like', "%{$name}%")->get();
 
