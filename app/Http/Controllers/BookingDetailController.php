@@ -21,7 +21,7 @@ class BookingDetailController extends Controller
 
     public function update(Request $request, $id)
     {
-        $bookingDetail = BookingDetail::where('bookingDetail_id', $id)->first();
+        $bookingDetail = BookingDetail::where('booking_id', $id)->first();
         $bookingDetail->bengkel_note = $request->bengkel_note;
         $bookingDetail->service_cost = $request->service_cost;
         if ($bookingDetail->save()){
