@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sparepart;
 use App\Models\Bengkel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SparepartController extends Controller
 {
@@ -15,7 +16,11 @@ class SparepartController extends Controller
      */
     public function index()
     {
-        return Sparepart::all();
+        $spareparts = DB::table('spareparts')
+        ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
+        ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')->get();
+
+        return $spareparts;
     }
 
     /**
@@ -30,9 +35,13 @@ class SparepartController extends Controller
 
     public function findByName(Request $request){
         $name = $request->name;
-        $result = Sparepart::where('name', 'like', "%{$name}%")->get();
 
-        return $result;
+        $spareparts = DB::table('spareparts')
+        ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
+        ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')
+        ->where('spareparts.name', 'like', "%{$name}%")->get();
+
+        return $spareparts;
     }
 
     public function findByBengkel($id){
