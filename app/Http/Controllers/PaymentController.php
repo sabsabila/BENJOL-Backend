@@ -33,8 +33,6 @@ class PaymentController extends Controller
     {
         $payment = new Payment;
         $payment->booking_id = $request->booking_id;
-        $payment->total_price = $request->total_price;
-        $payment->receipt = $request->receipt;
 
         if ($payment->save()) {
             echo "Data Successfully Added";
@@ -49,8 +47,18 @@ class PaymentController extends Controller
      */
     public function showMyPayment()
     {
-        $booking = auth('api')->account()->user->booking->first();
+        $booking = auth('api')->account()->user->booking->sortByDesc('booking_id')->first();
         return $booking->payment;
+    }
+
+    public function showBengkelPayment()
+    {
+        $bookings = auth('api')->account()->bengkel->booking;
+        $data = array();
+        foreach($bookings as $booking){
+            $data = $booking->payment;
+        }
+        return $data;
     }
 
     public function show($id){
@@ -75,18 +83,22 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateStatus(Request $request, $id)
     {
         $payment = Payment::find($id);
 
-        if ($request->booking_id != null)
-            $payment->booking_id = $request->booking_id;
+        $payment->status = $request->status;
+        
+        if ($payment->save()) {
+            echo "Data Successfully Updated";
+        }
+    }
 
-        if ($request->total_price != null)
-            $payment->total_price = $request->total_price;
-
-        if ($request->receipt != null)
-            $payment->receipt = $request->receipt;
+    public function updateReceipt(Request $request)
+    {
+        $booking = auth('api')->account()->user->booking->sortByDesc('booking_id')->first();
+        $payment = $booking->payment;
+        $payment->receipt = $request->receipt;
         
         if ($payment->save()) {
             echo "Data Successfully Updated";

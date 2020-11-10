@@ -23,7 +23,6 @@ class CreateBookingsTable extends Migration
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
             $table->integer('pickup_id')->nullable()->index('pickup_id_fk');
-            $table->string('repairment_note');
         });
     }
 

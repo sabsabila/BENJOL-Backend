@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sparepart;
 use App\Models\Bengkel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SparepartController extends Controller
 {
@@ -15,7 +16,11 @@ class SparepartController extends Controller
      */
     public function index()
     {
-        return Sparepart::all();
+        $spareparts = DB::table('spareparts')
+        ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
+        ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')->get();
+
+        return $spareparts;
     }
 
     /**
@@ -30,13 +35,24 @@ class SparepartController extends Controller
 
     public function findByName(Request $request){
         $name = $request->name;
-        $result = Sparepart::where('name', 'like', "%{$name}%")->get();
 
-        return $result;
+        $spareparts = DB::table('spareparts')
+        ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
+        ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')
+        ->where('spareparts.name', 'like', "%{$name}%")->get();
+
+        return $spareparts;
     }
 
     public function findByBengkel($id){
         $bengkel = Bengkel::find($id);
+        $result = $bengkel->sparepart;
+
+        return $result;
+    }
+
+    public function mySparepartList(){
+        $bengkel = auth('api')->account()->bengkel;
         $result = $bengkel->sparepart;
 
         return $result;
@@ -103,10 +119,7 @@ class SparepartController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $sparepart = Sparepart::find($id);
-
-        if ($request->bengkel_id != null)
-            $sparepart->bengkel_id = $request->bengkel_id;
+        $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
 
         if ($request->name != null)
             $sparepart->name = $request->name;
@@ -130,7 +143,7 @@ class SparepartController extends Controller
      */
     public function destroy($id)
     {
-        $sparepart = Sparepart::find($id);
+        $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
 
         if ($sparepart->delete()) {
             echo "Sparepart with id " . (int) $id . " successfully deleted";

@@ -14,8 +14,12 @@ class CreateBookingDetailsTable extends Migration
     public function up()
     {
         Schema::create('booking_details', function (Blueprint $table) {
+            $table->integer('bookingDetail_id', true);
             $table->integer('booking_id')->index('bookingdet_id_fk');
             $table->integer('service_id')->index('service_id_fk');
+            $table->string('repairment_note');            
+            $table->string('bengkel_note')->nullable();
+            $table->integer('service_cost')->nullable();
         });
     }
 

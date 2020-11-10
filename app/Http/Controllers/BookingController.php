@@ -10,6 +10,7 @@ use App\Models\Bengkel;
 use App\Models\User;
 use App\Models\Motorcycle;
 use App\Models\Pickup;
+use App\Models\Payment;
 
 class BookingController extends Controller
 {
@@ -39,6 +40,11 @@ class BookingController extends Controller
         return Booking::find($id);
     }
 
+    public function userBooking(){
+        $booking = $user->booking->sortByDesc('booking_id')->first();
+        return $booking;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -47,16 +53,13 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth('api')->account()->user;
         $booking = new Booking();
-        $service = new Service();
-        $service->save();
-        $motorcycle_id = $request->motorcycle_id;
-        //$motorcycle = $user->motorcycle::Find($id);
         $bookingDetailController = new BookingDetailController();
-        // $booking->bengkel_id =$bengkel->bengkel_id;
-        $booking->user_id =$user->user_id;
+      
+        $booking->user_id = auth('api')->account()->user->user_id;
+        $motorcycle_id = $request->motorcycle_id;  
         $booking->motorcycle_id = $motorcycle_id;
+
         $isPickup = $request->isPickup;
         if($isPickup == "Yes"){
             $pickup = new Pickup();
@@ -67,14 +70,19 @@ class BookingController extends Controller
         }else{
             $booking->pickup_id = null;
         }
+
         $booking->bengkel_id = $request->bengkel_id;
         $booking->repairment_type = $request->repairment_type;
         $booking->repairment_date = $request->repairment_date;
-        $booking->repairment_note = $request->repairment_note;
-        //$booking->start_time = $request->start_time;
-        //$booking->end_time = $request->end_time;
+
         if ($booking->save()){
-            $bookingDetail = $bookingDetailController->store($booking->booking_id,$service->service_id);
+            $payment = new Payment();
+            $payment->booking_id = $booking->booking_id;
+            $payment->save();
+            $bookingDetail = $bookingDetailController->store(
+                                $booking->booking_id,
+                                $request->service_id,
+                                $request->repairment_note);
             return " Data Successfully Added ";
         }
     }
@@ -112,7 +120,7 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $booking = Booking::find($id);
+        $booking = Booking::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
@@ -129,8 +137,9 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        $booking = Booking::find($id);
-        $bookingDetail = BookingDetail::where('booking_id', $id);
+        $booking = Booking::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $bookingDetail = BookingDetail::where('booking_id', $booking->booking_id);
+        Payment::where('booking_id', $booking->booking_id)->delete();
         $bookingDetail->delete();
         if ($booking->delete()){
             return "Booking with id " . (int) $id . " successfully deleted ";

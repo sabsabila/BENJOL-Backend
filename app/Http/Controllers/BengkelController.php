@@ -4,11 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bengkel;
+use Illuminate\Support\Facades\DB;
 
 class BengkelController extends Controller
 {
     public function index() {
-        return Bengkel::all();
+        $bengkels = DB::table('bengkels')
+        ->select('bengkels.*','accounts.phone_number', 'accounts.profile_picture')
+        ->join('accounts', 'bengkels.account_id', 'accounts.id')->get();
+
+        return $bengkels;
     }
 
     public function store(Request $request) {
@@ -24,9 +29,12 @@ class BengkelController extends Controller
 
     public function findByName(Request $request){
         $name = $request->name;
-        $result = Bengkel::where('name', 'like', "%{$name}%")->get();
+        $bengkels = DB::table('bengkels')
+        ->select('bengkels.*','accounts.phone_number', 'accounts.profile_picture')
+        ->join('accounts', 'bengkels.account_id', 'accounts.id')
+        ->where('bengkels.name', 'like', "%{$name}%")->get();
 
-        return $result;
+        return $bengkels;
     }
 
     public function show()

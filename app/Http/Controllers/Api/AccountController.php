@@ -43,6 +43,8 @@ class AccountController extends Controller
                 'token' => $token->accessToken
             ]);
 
+        }else{
+            return "Wrong email or password !";
         }
     }
 
@@ -120,11 +122,11 @@ class AccountController extends Controller
 
     public function destroy(){
         $account = Auth::account();
-        if($account->user != null)
+        if($account->user != null){
             $account->user->delete();
-        else
+        }else{
             $account->bengkel->delete();
-        $account->delete();
+        }$account->delete();
 
         return "data deleted successfully";
     }

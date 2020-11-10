@@ -25,6 +25,10 @@ class Bengkel extends Model
         return $this->hasMany('App\Models\Sparepart', 'bengkel_id', 'bengkel_id');
     }
 
+    public function service(){
+        return $this->hasMany('App\Models\Service', 'bengkel_id', 'bengkel_id');
+    }
+
     public function booking()
     {
         return $this->hasMany('App\Models\Booking', 'bengkel_id', 'bengkel_id');

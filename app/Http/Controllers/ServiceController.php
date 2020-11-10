@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Service;
+use App\Models\BookingDetail;
 use Illuminate\Support\Facades\App;
 
 class ServiceController extends Controller
@@ -39,8 +40,9 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $service = new Service;
+        $service->bengkel_id = auth('api')->account()->bengkel->bengkel_id;
         $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
+
         if($service->save()){
             echo "service data successfully added !";
         }
@@ -52,9 +54,20 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($bengkelId)
     {
-        return auth('api')->account()->user->booking->first()->bookingDetail->first()->service->first();
+        $bengkel = Bengkel::find($bengkelId);
+        $services = $bengkel->service;
+        
+        return $services;
+    }
+
+    public function myServices()
+    {
+        $bengkel = auth('api')->account()->bengkel;
+        $services = $bengkel->service;
+        
+        return $services;
     }
 
     /**
@@ -77,9 +90,8 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $service = Service::find($id);
+        $service = Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         $service->service_name = $request->service_name;
-        $service->cost = $request->cost;
         if($service->save()){
             echo "service data successfully updated !";
         }
@@ -93,10 +105,9 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        $service= Service::find($id);
-        // $service->delete();
+        $service= Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         if($service->delete()){
-            echo "service with id" .((int)$id). "has successfully removed.";
+            echo "service with id " .((int)$id). " has successfully removed.";
         }
     }
 }
