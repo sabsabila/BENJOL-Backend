@@ -116,6 +116,9 @@ class AccountController extends Controller
         if($request->phone_number != null)
             $account->phone_number = $request->phone_number;
 
+        if($request->profile_picture != null)
+            $account->profile_picture = $request->profile_picture;
+
         $account->save();
         return "data updated successfully";
     }
