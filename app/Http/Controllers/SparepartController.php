@@ -82,6 +82,8 @@ class SparepartController extends Controller
         $sparepart->name = $request->name;
         $sparepart->price = $request->price;
         $sparepart->stock = $request->stock;
+        if($request->picture != null)
+            $sparepart->picture = $request->picture;
 
         if ($sparepart->save()) {
             echo "Data Successfully Added";
@@ -129,6 +131,9 @@ class SparepartController extends Controller
 
         if ($request->stock != null)
             $sparepart->stock = $request->stock;
+
+        if($request->picture != null)
+            $sparepart->picture = $request->picture;
         
         if ($sparepart->save()) {
             echo "Data Successfully Updated";
