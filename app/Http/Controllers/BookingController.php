@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Motorcycle;
 use App\Models\Pickup;
 use App\Models\Payment;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -41,6 +42,7 @@ class BookingController extends Controller
     }
 
     public function userBooking(){
+        $user = auth('api')->account()->user;
         $booking = $user->booking->sortByDesc('booking_id')->first();
         return $booking;
     }
@@ -89,7 +91,13 @@ class BookingController extends Controller
 
     public function showMyBooking(){
         $bengkel = auth('api')->account()->bengkel;
-        return $bengkel->booking;
+        $booking = DB::table('bookings')
+        ->select('bookings.*','booking_details.*')
+        ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->where('bookings.bengkel_id', $bengkel->bengkel_id )
+        ->get();
+
+        return $booking;
     }
 
     /**
