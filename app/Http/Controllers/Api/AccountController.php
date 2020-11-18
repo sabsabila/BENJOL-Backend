@@ -37,8 +37,6 @@ class AccountController extends Controller
 
             $token = $account->createToken($account->email.'-'.now(), [$this->scope]);
 
-            echo $userRole;
-
             return response()->json([
                 'token' => $token->accessToken
             ]);
@@ -67,10 +65,9 @@ class AccountController extends Controller
         $success['username'] =  $account->username;
         $user = new User;
         $user->account_id = $account->id;
+        $user->first_name = $request->firstName;
+        $user->last_name = $request->lastName;
         $user->save();
-        //$account->user = $user;
-        //$account->save();
-        //echo $account->user->user_id;
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
