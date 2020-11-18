@@ -68,9 +68,6 @@ class AccountController extends Controller
         $user = new User;
         $user->account_id = $account->id;
         $user->save();
-        //$account->user = $user;
-        //$account->save();
-        //echo $account->user->user_id;
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
