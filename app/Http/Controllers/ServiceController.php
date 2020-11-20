@@ -44,7 +44,7 @@ class ServiceController extends Controller
         $service->service_name = $request->service_name;
 
         if($service->save()){
-            echo "service data successfully added !";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -93,7 +93,7 @@ class ServiceController extends Controller
         $service = Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         $service->service_name = $request->service_name;
         if($service->save()){
-            echo "service data successfully updated !";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -107,7 +107,7 @@ class ServiceController extends Controller
     {
         $service= Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         if($service->delete()){
-            echo "service with id " .((int)$id). " has successfully removed.";
+            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }

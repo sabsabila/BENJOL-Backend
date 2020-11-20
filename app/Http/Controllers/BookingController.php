@@ -84,8 +84,9 @@ class BookingController extends Controller
                                 $booking->booking_id,
                                 $request->service_id,
                                 $request->repairment_note);
-            return " Data Successfully Added ";
-        }
+            return response()->json([ 'message' => "Data Successfully Added"]);
+        }else
+            return response()->json([ 'message' => "Failed"]);
     }
 
     public function showMyBooking(){
