@@ -56,7 +56,7 @@ class PaymentController extends Controller
         ->sortByDesc('booking_id')
         ->first();
         
-        return response()->json([$data]);
+        return response()->json(['payment' => $data]);
     }
 
     public function showBengkelPayment()
@@ -66,7 +66,7 @@ class PaymentController extends Controller
         foreach($bookings as $booking){
             $data = $booking->payment;
         }
-        return $data;
+        return response()->json(['payment' => $data]);
     }
 
     public function show($id){

@@ -26,7 +26,7 @@ class MotorcycleController extends Controller
 
     public function show()
     {
-        return auth('api')->account()->user->motorcycle;
+        return response()->json(['motorcycles' => auth('api')->account()->user->motorcycle]);
     }
 
     public function findById($id)

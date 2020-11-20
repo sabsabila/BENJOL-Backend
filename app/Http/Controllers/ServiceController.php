@@ -59,7 +59,7 @@ class ServiceController extends Controller
         $bengkel = Bengkel::find($bengkelId);
         $services = $bengkel->service;
         
-        return $services;
+        return response()->json(['services' => $services]);
     }
 
     public function myServices()
@@ -67,7 +67,7 @@ class ServiceController extends Controller
         $bengkel = auth('api')->account()->bengkel;
         $services = $bengkel->service;
         
-        return $services;
+        return response()->json(['services' => $services]);
     }
 
     /**

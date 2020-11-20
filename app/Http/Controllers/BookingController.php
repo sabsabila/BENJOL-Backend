@@ -44,7 +44,7 @@ class BookingController extends Controller
     public function userBooking(){
         $user = auth('api')->account()->user;
         $booking = $user->booking->sortByDesc('booking_id')->first();
-        return $booking;
+        return response()->json(['booking' => $booking]);
     }
 
     /**
@@ -97,7 +97,7 @@ class BookingController extends Controller
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
         ->get();
 
-        return $booking;
+        return response()->json(['booking' => $booking]);
     }
 
     /**

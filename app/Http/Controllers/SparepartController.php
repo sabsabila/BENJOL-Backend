@@ -20,7 +20,7 @@ class SparepartController extends Controller
         ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
         ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')->get();
 
-        return $spareparts;
+        return response()->json(['spareparts' => $spareparts]);
     }
 
     /**
@@ -41,21 +41,21 @@ class SparepartController extends Controller
         ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')
         ->where('spareparts.name', 'like', "%{$name}%")->get();
 
-        return $spareparts;
+        return response()->json(['spareparts' => $spareparts]);
     }
 
     public function findByBengkel($id){
         $bengkel = Bengkel::find($id);
         $result = $bengkel->sparepart;
 
-        return $result;
+        return response()->json(['spareparts' => $result]);
     }
 
     public function mySparepartList(){
         $bengkel = auth('api')->account()->bengkel;
         $result = $bengkel->sparepart;
 
-        return $result;
+        return response()->json(['spareparts' => $result]);
     }
 
     public function findByNameInBengkel(Request $request){
@@ -64,7 +64,7 @@ class SparepartController extends Controller
         $result = Sparepart::where('name', 'like', "%{$name}%")
                 ->where('bengkel_id', $bengkel->bengkel_id)->get();
 
-        return $result;
+        return response()->json(['spareparts' => $result]);
     }
 
     /**
