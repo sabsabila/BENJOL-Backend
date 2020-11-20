@@ -74,7 +74,6 @@ class BookingController extends Controller
         }
 
         $booking->bengkel_id = $request->bengkel_id;
-        $booking->repairment_type = $request->repairment_type;
         $booking->repairment_date = $request->repairment_date;
 
         if ($booking->save()){
