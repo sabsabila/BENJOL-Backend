@@ -47,7 +47,7 @@ class UserController extends Controller
         $user->birth_date = $request->birth_date;
         $user->save();
 
-        return "data added successfully";
+        return response()->json([ 'message' => "Data added successfully"]);
     }
 
     public function update(Request $request)
@@ -71,13 +71,13 @@ class UserController extends Controller
             $user->birth_date = $request->birth_date;
 
         $user->save();
-        return "data updated successfully";
+        return response()->json([ 'message' => "Data updated successfully"]);
     }
 
     public function destroy(){
         $user = User::where('account_id', auth('api')->account()->id)->delete();
         //$user->delete();
 
-        return "data deleted successfully";
+        return response()->json([ 'message' =>  "Data deleted successfully"]);
     }
 }

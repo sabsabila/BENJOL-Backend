@@ -15,7 +15,7 @@ class BookingDetailController extends Controller
         $bookingDetail->service_id = $service_id;
         $bookingDetail->repairment_note = $repairment_note;
         if ($bookingDetail->save()){
-            return " Data Successfully Added ";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -25,7 +25,7 @@ class BookingDetailController extends Controller
         $bookingDetail->bengkel_note = $request->bengkel_note;
         $bookingDetail->service_cost = $request->service_cost;
         if ($bookingDetail->save()){
-            return " Data Successfully Added ";
+            return response()->json([ 'message' => "Data Successfully Changed"]);
         }
     }
 
@@ -34,7 +34,8 @@ class BookingDetailController extends Controller
         $bookingDetails = auth('api')->account()
                         ->user->booking->sortByDesc('booking_id')
                         ->first()->bookingDetail;
-        return $bookingDetails;
+
+        return response()->json(['bookingDetail' => $bookingDetails]);
     }
 
     public function showInBengkel()
@@ -45,6 +46,6 @@ class BookingDetailController extends Controller
         foreach($bookings as $booking){
             $data = $booking->bookingDetail;
         }
-        return $data;
+        return response()->json(['bookingDetails' => $data]);
     }
 }

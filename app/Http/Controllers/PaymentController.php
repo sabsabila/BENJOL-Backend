@@ -36,7 +36,7 @@ class PaymentController extends Controller
         $payment->booking_id = $request->booking_id;
 
         if ($payment->save()) {
-            echo "Data Successfully Added";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -70,7 +70,7 @@ class PaymentController extends Controller
     }
 
     public function show($id){
-        return Payment::find($id);
+        return response()->json(['payment' => Payment::find($id)]);
     }
 
     /**
@@ -98,7 +98,7 @@ class PaymentController extends Controller
         $payment->status = $request->status;
         
         if ($payment->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -109,7 +109,7 @@ class PaymentController extends Controller
         $payment->receipt = $request->receipt;
         
         if ($payment->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -124,7 +124,7 @@ class PaymentController extends Controller
         $payment = Payment::find($id);
 
         if ($payment->delete()) {
-            echo "Payment with id " . (int) $id . " successfully deleted";
+            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }

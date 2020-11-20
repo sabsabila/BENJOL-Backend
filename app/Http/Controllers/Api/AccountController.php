@@ -128,7 +128,9 @@ class AccountController extends Controller
             $account->bengkel->delete();
         }$account->delete();
 
-        return "data deleted successfully";
+        return response()->json([
+            'message' => "data deleted successfully"
+        ]);
     }
 
     public function logout(Request $request)

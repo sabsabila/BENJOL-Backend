@@ -23,7 +23,7 @@ class BengkelController extends Controller
         $bengkel->address = $request->address;
 
         if ($bengkel->save()) {
-            echo "Data Successfully Added";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -57,7 +57,7 @@ class BengkelController extends Controller
             $bengkel->address = $request->address;
         
         if ($bengkel->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -65,7 +65,7 @@ class BengkelController extends Controller
         $bengkel = auth('api')->account()->bengkel;
         
         if ($bengkel->delete()) {
-            echo "successfully deleted";
+            return response()->json([ 'message' => "successfully deleted"]);
         }
     }
 }

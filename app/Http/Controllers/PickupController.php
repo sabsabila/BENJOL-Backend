@@ -14,7 +14,7 @@ class PickupController extends Controller
      */
     public function index()
     {
-        return Pickup::all();
+        return response()->json(['pickups' => Pickup::all()]);
     }
 
     /**
@@ -40,7 +40,7 @@ class PickupController extends Controller
         $pickup->dropoff_location = $request->dropoff_location;
         //$pickup->status = $request->status;
         if($pickup->save()){
-            echo "Your Pickup data has successfully saved!";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -53,7 +53,7 @@ class PickupController extends Controller
     public function show($id)
     {
         $pickup = Pickup::find($id);
-        return $pickup;
+        return response()->json([ 'pickup' => $pickup]);
     }
 
     /**
@@ -79,7 +79,7 @@ class PickupController extends Controller
         $pickup = Pickup::find($id);
         $pickup->status = $request->status;
         if($pickup->save()){
-            echo "Your Pickup data has successfully updated!";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -93,7 +93,7 @@ class PickupController extends Controller
     {
         $pickup = Pickup::find($id);
         if($pickup->delete()){
-            echo "Your Pickup data has successfully deleted!";
+            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }

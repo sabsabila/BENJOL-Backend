@@ -86,7 +86,7 @@ class SparepartController extends Controller
             $sparepart->picture = $request->picture;
 
         if ($sparepart->save()) {
-            echo "Data Successfully Added";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -98,7 +98,7 @@ class SparepartController extends Controller
      */
     public function show($id)
     {
-        return Sparepart::find($id);
+        return response()->json(['spareparts' => Sparepart::find($id)]);
     }
 
     /**
@@ -136,7 +136,7 @@ class SparepartController extends Controller
             $sparepart->picture = $request->picture;
         
         if ($sparepart->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -151,7 +151,7 @@ class SparepartController extends Controller
         $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
 
         if ($sparepart->delete()) {
-            echo "Sparepart with id " . (int) $id . " successfully deleted";
+            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }
