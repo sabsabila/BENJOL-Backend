@@ -25,7 +25,7 @@ class ProgressController extends Controller
             $plate_number = $motorcycle->plate_number
         ];
 
-        return response()->json($data);
+        return response()->json('progress' => $data);
     }
 
 
