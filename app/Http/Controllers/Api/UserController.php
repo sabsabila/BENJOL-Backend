@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 //use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 //use App\Models\Account;
 
 class UserController extends Controller
@@ -21,7 +22,13 @@ class UserController extends Controller
 
     public function show()
     {
-        return auth('api')->account()->user;
+        $data = DB::table('users')
+        ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
+        ->join('accounts', 'users.account_id', 'accounts.id')
+        ->where('accounts.id', auth('api')->account()->id)
+        ->get();
+
+        return response()->json(['users' => $data]);
     }
 
     public function edit($id)
