@@ -18,7 +18,6 @@ class CreateBookingsTable extends Migration
             $table->integer('bengkel_id')->index('bengkelbook_id_fk');
             $table->integer('user_id')->index('user_id_fk');
             $table->integer('motorcycle_id')->index('motorcycle_id_fk');
-            $table->string('repairment_type');
             $table->date('repairment_date');
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();

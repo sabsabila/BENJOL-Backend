@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 //use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 //use App\Models\Account;
 
 class UserController extends Controller
@@ -21,7 +22,13 @@ class UserController extends Controller
 
     public function show()
     {
-        return auth('api')->account()->user;
+        $data = DB::table('users')
+        ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
+        ->join('accounts', 'users.account_id', 'accounts.id')
+        ->where('accounts.id', auth('api')->account()->id)
+        ->get();
+
+        return response()->json(['users' => $data]);
     }
 
     public function edit($id)
@@ -40,7 +47,7 @@ class UserController extends Controller
         $user->birth_date = $request->birth_date;
         $user->save();
 
-        return "data added successfully";
+        return response()->json([ 'message' => "Data added successfully"]);
     }
 
     public function update(Request $request)
@@ -49,28 +56,42 @@ class UserController extends Controller
         $last_name = $request->last_name;
         $gender = $request->gender;
         $birth_date = $request->birth_date;
-        $user = auth('api')->account()->user;
+        $email = $request->email;
+        $username = $request->username;
+        $phone_number = $request->phone_number;
+        $account = auth('api')->account();
+        $user = $account->user;
         
-        if($request->first_name != null)
-            $user->first_name = $request->first_name;
+        if($first_name != null)
+            $user->first_name = $first_name;
         
-        if($request->last_name != null)
-            $user->last_name = $request->last_name;
+        if($last_name != null)
+            $user->last_name = $last_name;
 
-        if($request->gender != null)
-            $user->gender = $request->gender;
+        if($gender != null)
+            $user->gender = $gender;
 
-        if($request->birth_date != null)
-            $user->birth_date = $request->birth_date;
+        if($birth_date != null)
+            $user->birth_date = $birth_date;
+        
+        if($email != null)
+            $account->email = $email;
 
+        if($username != null)
+            $account->username = $username;
+
+        if($phone_number != null)
+            $account->phone_number = $phone_number;
+
+        $account->save();
         $user->save();
-        return "data updated successfully";
+        return response()->json([ 'message' => "Data updated successfully"]);
     }
 
     public function destroy(){
         $user = User::where('account_id', auth('api')->account()->id)->delete();
         //$user->delete();
 
-        return "data deleted successfully";
+        return response()->json([ 'message' =>  "Data deleted successfully"]);
     }
 }

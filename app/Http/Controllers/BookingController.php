@@ -44,7 +44,7 @@ class BookingController extends Controller
     public function userBooking(){
         $user = auth('api')->account()->user;
         $booking = $user->booking->sortByDesc('booking_id')->first();
-        return $booking;
+        return response()->json(['booking' => $booking]);
     }
 
     /**
@@ -74,7 +74,6 @@ class BookingController extends Controller
         }
 
         $booking->bengkel_id = $request->bengkel_id;
-        $booking->repairment_type = $request->repairment_type;
         $booking->repairment_date = $request->repairment_date;
 
         if ($booking->save()){
@@ -85,8 +84,9 @@ class BookingController extends Controller
                                 $booking->booking_id,
                                 $request->service_id,
                                 $request->repairment_note);
-            return " Data Successfully Added ";
-        }
+            return response()->json([ 'message' => "Data Successfully Added"]);
+        }else
+            return response()->json([ 'message' => "Failed"]);
     }
 
     public function showMyBooking(){
@@ -97,7 +97,7 @@ class BookingController extends Controller
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
         ->get();
 
-        return $booking;
+        return response()->json(['booking' => $booking]);
     }
 
     /**

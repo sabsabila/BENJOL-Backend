@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Payment;
 
 class PaymentController extends Controller
@@ -35,7 +36,7 @@ class PaymentController extends Controller
         $payment->booking_id = $request->booking_id;
 
         if ($payment->save()) {
-            echo "Data Successfully Added";
+            return response()->json([ 'message' => "Data Successfully Added"]);
         }
     }
 
@@ -47,8 +48,15 @@ class PaymentController extends Controller
      */
     public function showMyPayment()
     {
-        $booking = auth('api')->account()->user->booking->sortByDesc('booking_id')->first();
-        return $booking->payment;
+        $data = DB::table('bookings')
+        ->select('payments.*','bookings.repairment_date', 'bookings.repairment_type', 'booking_details.service_cost', 'booking_details.bengkel_note')
+        ->join('payments', 'payments.booking_id', 'bookings.booking_id')
+        ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->where('bookings.user_id', auth('api')->account()->user->user_id)
+        ->sortByDesc('booking_id')
+        ->first();
+        
+        return response()->json(['payment' => $data]);
     }
 
     public function showBengkelPayment()
@@ -58,11 +66,11 @@ class PaymentController extends Controller
         foreach($bookings as $booking){
             $data = $booking->payment;
         }
-        return $data;
+        return response()->json(['payment' => $data]);
     }
 
     public function show($id){
-        return Payment::find($id);
+        return response()->json(['payment' => Payment::find($id)]);
     }
 
     /**
@@ -90,7 +98,7 @@ class PaymentController extends Controller
         $payment->status = $request->status;
         
         if ($payment->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -101,7 +109,7 @@ class PaymentController extends Controller
         $payment->receipt = $request->receipt;
         
         if ($payment->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -116,7 +124,7 @@ class PaymentController extends Controller
         $payment = Payment::find($id);
 
         if ($payment->delete()) {
-            echo "Payment with id " . (int) $id . " successfully deleted";
+            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }

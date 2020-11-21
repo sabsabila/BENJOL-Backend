@@ -20,18 +20,18 @@ class MotorcycleController extends Controller
         $motorcycle->user_id = auth('api')->account()->user->user_id;
 
         if ($motorcycle->save()) {
-            echo "Data Successfully Added";
+            return response()->json(['message' => "Data Successfully Added"]);
         }
     }
 
     public function show()
     {
-        return auth('api')->account()->user->motorcycle;
+        return response()->json(['motorcycles' => auth('api')->account()->user->motorcycle]);
     }
 
     public function findById($id)
     {
-        return Motorcycle::find($id);
+        return response()->json(['motorcycles' => Motorcycle::find($id)]);
     }
 
     public function update(Request $request, $id)
@@ -46,7 +46,7 @@ class MotorcycleController extends Controller
             $motorcycle->plate_number = $request->plate_number;
         
         if ($motorcycle->save()) {
-            echo "Data Successfully Updated";
+            return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
 
@@ -55,7 +55,7 @@ class MotorcycleController extends Controller
         $motorcycle = Motorcycle::find($id)->where('user_id', auth('api')->account()->user);
 
         if ($motorcycle->delete()) {
-            echo "Motorcycle with id " . (int) $id . " successfully deleted";
+            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }
