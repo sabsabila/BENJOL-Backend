@@ -64,6 +64,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //search
         Route::get('searchSparepart/{id}', 'SparepartController@findByBengkel');
+        Route::get('bengkel/{id}', 'BengkelController@getBengkel');
 
         //booking & checkprogress
         Route::post('booking','BookingController@store' );
