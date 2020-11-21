@@ -44,6 +44,16 @@ class BengkelController extends Controller
         return response()->json(['bengkel' => $bengkel]);
     }
 
+    public function getBengkel($id)
+    {
+        $bengkel = DB::table('bengkels')
+        ->select('bengkels.*','accounts.phone_number', 'accounts.profile_picture')
+        ->join('accounts', 'bengkels.account_id', 'accounts.id')
+        ->where('bengkels.bengkel_id', $id)->get();
+
+        return response()->json(['bengkel' => $bengkel]);
+    }
+
     public function update(Request $request) {
         $bengkel = auth('api')->account()->bengkel;
 
