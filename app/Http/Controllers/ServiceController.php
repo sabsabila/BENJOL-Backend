@@ -6,6 +6,7 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\BookingDetail;
+Use App\Models\Bengkel;
 use Illuminate\Support\Facades\App;
 
 class ServiceController extends Controller
