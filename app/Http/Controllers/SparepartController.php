@@ -121,7 +121,9 @@ class SparepartController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $sparepart = Sparepart::where('sparepart_id', $id)
+        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->first();
 
         if ($request->name != null)
             $sparepart->name = $request->name;
@@ -148,7 +150,9 @@ class SparepartController extends Controller
      */
     public function destroy($id)
     {
-        $sparepart = Sparepart::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $sparepart = Sparepart::where('sparepart_id', $id)
+        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->first();
 
         if ($sparepart->delete()) {
             return response()->json([ 'message' => "Data Successfully Deleted"]);

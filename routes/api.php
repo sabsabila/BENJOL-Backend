@@ -41,6 +41,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('account', 'API\AccountController@update');
         Route::delete('account', 'API\AccountController@destroy');
         
+        Route::get('motorcycle/{id}', 'MotorcycleController@findById');
+        
     });
 
     // buat user 
@@ -103,9 +105,6 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         // otak atik pickup
         Route::put('/pickup/{id}', 'PickupController@update');
-
-        //search
-        Route::get('motorcycle/{id}', 'MotorcycleController@findById');
 
         //booking
         Route::get('myBooking','BookingController@showMyBooking' );
