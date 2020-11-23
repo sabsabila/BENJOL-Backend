@@ -6,6 +6,7 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Service;
 use App\Models\BookingDetail;
+Use App\Models\Bengkel;
 use Illuminate\Support\Facades\App;
 
 class ServiceController extends Controller
@@ -90,7 +91,10 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $service = Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $service = Service::where('service_id', $id)
+        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->first();
+
         $service->service_name = $request->service_name;
         if($service->save()){
             return response()->json([ 'message' => "Data Successfully Updated"]);
@@ -105,7 +109,10 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        $service= Service::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $service= Service::where('service_id', $id)
+        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->first();
+        
         if($service->delete()){
             return response()->json([ 'message' => "Data Successfully Deleted"]);
         }

@@ -36,8 +36,8 @@ class MotorcycleController extends Controller
 
     public function update(Request $request, $id)
     {
-        $motorcycle = Motorcycle::find($id)->where('user_id', auth('api')->account()->user->user_id)
-                                            ->first();
+        $motorcycle = Motorcycle::where('user_id', auth('api')->account()->user->user_id)
+                                    ->where('motorcycle_id', $id)->first();
 
         if ($request->brand != null)
             $motorcycle->brand = $request->brand;
@@ -52,7 +52,8 @@ class MotorcycleController extends Controller
 
     public function destroy($id)
     {
-        $motorcycle = Motorcycle::find($id)->where('user_id', auth('api')->account()->user);
+        $motorcycle = Motorcycle::where('user_id', auth('api')->account()->user->user_id)
+                                    ->where('motorcycle_id', $id)->first();
 
         if ($motorcycle->delete()) {
             return response()->json([ 'message' => "Data Successfully Deleted"]);
