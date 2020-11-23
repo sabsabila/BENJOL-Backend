@@ -13,7 +13,7 @@ class BengkelController extends Controller
         ->select('bengkels.*','accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'bengkels.account_id', 'accounts.id')->get();
 
-        return response()->json(['bengkels' => $bengkels]);
+        return response()->json(['bengkel' => $bengkels]);
     }
 
     public function store(Request $request) {
@@ -34,7 +34,7 @@ class BengkelController extends Controller
         ->join('accounts', 'bengkels.account_id', 'accounts.id')
         ->where('bengkels.name', 'like', "%{$name}%")->get();
 
-        return response()->json(['bengkels' => $bengkels]);
+        return response()->json(['bengkel' => $bengkels]);
     }
 
     public function show()
