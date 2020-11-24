@@ -50,9 +50,11 @@ class PickupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        $pickup = Pickup::find($id);
+        $user = auth('api')->account()->user;
+        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $pickup = Pickup::find($booking->pickup_id);
         return response()->json([ 'pickup' => $pickup]);
     }
 
