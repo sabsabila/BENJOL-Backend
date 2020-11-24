@@ -52,7 +52,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('user', 'API\UserController@update');
 
         // otak atik pickup
-        Route::get('pickup/{id}', 'PickupController@show');
+        Route::get('pickup', 'PickupController@show');
 
         //otak atik payment
         Route::put('uploadReceipt', 'PaymentController@updateReceipt');
@@ -65,7 +65,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
 
         //search
-        Route::get('searchSparepart/{id}', 'SparepartController@findByBengkel');
+        Route::get('sparepartBengkel/{id}', 'SparepartController@findByBengkel');
+        Route::post('searchSparepartBengkel/{id}', 'SparepartController@searchInBengkel');
         Route::get('bengkel/{id}', 'BengkelController@getBengkel');
 
         //booking & checkprogress

@@ -45,10 +45,12 @@ class SparepartController extends Controller
     }
 
     public function findByBengkel($id){
-        $bengkel = Bengkel::find($id);
-        $result = $bengkel->sparepart;
-
-        return response()->json(['spareparts' => $result]);
+        $spareparts = DB::table('spareparts')
+        ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
+        ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')
+        ->where('spareparts.bengkel_id', $id)->get();
+    
+        return response()->json(['spareparts' => $spareparts]);
     }
 
     public function mySparepartList(){
@@ -56,6 +58,16 @@ class SparepartController extends Controller
         $result = $bengkel->sparepart;
 
         return response()->json(['spareparts' => $result]);
+    }
+
+    public function searchInBengkel(Request $request, $id){
+        $name = $request->name;
+        $spareparts = DB::table('spareparts')
+        ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
+        ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')
+        ->where('spareparts.name', 'like', "%{$name}%")
+        ->where('spareparts.bengkel_id', $id)->get();
+        return response()->json(['spareparts' => $spareparts]);
     }
 
     public function findByNameInBengkel(Request $request){
