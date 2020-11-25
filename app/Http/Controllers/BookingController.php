@@ -43,7 +43,12 @@ class BookingController extends Controller
 
     public function userBooking(){
         $user = auth('api')->account()->user;
-        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $booking = DB::table('bookings')
+        ->select('bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
+        ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
+        ->where('bookings.bengkel_id', $user->user_id )
+        ->first();
         return response()->json(['booking' => $booking]);
     }
 

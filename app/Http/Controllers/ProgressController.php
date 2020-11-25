@@ -19,7 +19,7 @@ class ProgressController extends Controller
         $user = auth('api')->account()->user;
         $booking = $user->booking->sortByDesc('booking_id')->first();
         $motorcycle = Motorcycle::where('motorcycle_id', $booking->motorcycle_id)->first();
-        $data[] =[
+        $data =[
             $start_time = $booking->start_time,
             $end_time = $booking->end_time,
             $plate_number = $motorcycle->plate_number
