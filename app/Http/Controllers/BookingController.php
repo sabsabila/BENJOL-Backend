@@ -138,7 +138,7 @@ class BookingController extends Controller
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
         if ($booking->save()){
-            return " Data Successfully Updated ";
+            return response()->json(['message' => " Data Successfully Updated"]);
         }
     }
 
@@ -155,7 +155,7 @@ class BookingController extends Controller
         Payment::where('booking_id', $booking->booking_id)->delete();
         $bookingDetail->delete();
         if ($booking->delete()){
-            return "Booking with id " . (int) $id . " successfully deleted ";
+            return response()->json(['message' => "Booking with id " . (int) $id . " successfully deleted "]);
         }
     }
 }
