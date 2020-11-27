@@ -55,7 +55,12 @@ class PickupController extends Controller
     {
         $user = auth('api')->account()->user;
         $booking = $user->booking->sortByDesc('booking_id')->first();
-        $pickup = Pickup::find($booking->pickup_id);
+
+        if($booking != null){
+            $pickup = Pickup::find($booking->pickup_id);
+        }else{
+            $pickup = null;
+        }
         return response()->json([ 'pickup' => $pickup]);
     }
 
