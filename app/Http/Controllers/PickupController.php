@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pickup;
+use App\Models\Booking;
 
 class PickupController extends Controller
 {
@@ -78,7 +79,8 @@ class PickupController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $pickup = Pickup::find($id);
+        $booking = Booking::find($id);
+        $pickup = Pickup::where('pickup_id', $booking->pickup_id)->first();
         $pickup->status = $request->status;
         if($pickup->save()){
             return response()->json([ 'message' => "Data Successfully Updated"]);
