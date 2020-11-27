@@ -29,7 +29,7 @@ class ProgressController extends Controller
                 $estimate = $current_time->diff($end_time);
                 $minutesLeft = ($end_time->diff($current_time))->format('%H') *60 + ($end_time->diff($current_time))->format('%i');
                 $totalTime = ($end_time->diff($start_time))->format('%H') *60 + ($end_time->diff($start_time))->format('%i');
-                $progress = round(($minutesLeft / $totalTime)*100);
+                $progress = round((($totalTime - $minutesLeft) / $totalTime)*100);
 
                 if($estimate->invert == 1){
                     $estimate->h = 0;
