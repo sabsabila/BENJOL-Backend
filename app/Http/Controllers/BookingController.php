@@ -98,8 +98,11 @@ class BookingController extends Controller
     public function showMyBooking(){
         $bengkel = auth('api')->account()->bengkel;
         $booking = DB::table('bookings')
-        ->select('bookings.*','booking_details.*')
+        ->select('bookings.booking_id','bookings.repairment_date','bookings.start_time', 'bookings.end_time', 'booking_details.repairment_note', 'users.user_id', 'users.first_name', 'users.last_name', 'services.service_name', 'pickups.pickup_location', 'pickups.dropoff_location')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->join('users', 'bookings.user_id', 'users.user_id')
+        ->join('services', 'booking_details.service_id', 'services.service_id')
+        ->join('pickups', 'bookings.pickup_id', 'pickups.pickup_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
         ->get();
 

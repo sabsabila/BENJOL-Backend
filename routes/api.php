@@ -113,6 +113,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
         Route::get('myBookingDetail','BookingController@showInBengkel');
+
+        //user
+        Route::get('userInfo/{id}','API\UserController@seeUser' );
     });
 
     
