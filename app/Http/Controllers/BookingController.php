@@ -43,7 +43,12 @@ class BookingController extends Controller
 
     public function userBooking(){
         $user = auth('api')->account()->user;
-        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $booking = DB::table('bookings')
+        ->select('bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
+        ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
+        ->where('bookings.bengkel_id', $user->user_id )
+        ->first();
         return response()->json(['booking' => $booking]);
     }
 
@@ -133,7 +138,7 @@ class BookingController extends Controller
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
         if ($booking->save()){
-            return " Data Successfully Updated ";
+            return response()->json(['message' => " Data Successfully Updated"]);
         }
     }
 
@@ -150,7 +155,7 @@ class BookingController extends Controller
         Payment::where('booking_id', $booking->booking_id)->delete();
         $bookingDetail->delete();
         if ($booking->delete()){
-            return "Booking with id " . (int) $id . " successfully deleted ";
+            return response()->json(['message' => "Booking with id " . (int) $id . " successfully deleted "]);
         }
     }
 }
