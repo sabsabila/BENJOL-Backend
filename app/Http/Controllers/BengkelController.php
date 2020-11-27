@@ -39,7 +39,11 @@ class BengkelController extends Controller
 
     public function show()
     {
-        $bengkel = auth('api')->account()->bengkel;
+        $id = auth('api')->account()->bengkel->bengkel_id;
+        $bengkel = DB::table('bengkels')
+        ->select('bengkels.*','accounts.username', 'accounts.email', 'accounts.phone_number', 'accounts.profile_picture')
+        ->join('accounts', 'bengkels.account_id', 'accounts.id')
+        ->where('bengkels.bengkel_id', $id)->first();
 
         return response()->json(['bengkel' => $bengkel]);
     }
@@ -55,18 +59,28 @@ class BengkelController extends Controller
     }
 
     public function update(Request $request) {
-        $bengkel = auth('api')->account()->bengkel;
-
-        if ($request->account_id != null)
-            $bengkel->account_id = $request->account_id;
-        
+        $account = auth('api')->account();
+        $bengkel = $account->bengkel;
+      
         if ($request->name != null)
             $bengkel->name = $request->name;
 
         if ($request->address != null)
             $bengkel->address = $request->address;
+
+        if ($request->username != null)
+            $account->username = $request->username;
+
+        if ($request->email != null)
+            $account->email = $request->email;
+
+        if ($request->phone_number != null)
+            $account->phone_number = $request->phone_number;
+
+        if ($request->profile_picture != null)
+            $account->profile_picture = $request->profile_picture;
         
-        if ($bengkel->save()) {
+        if ($bengkel->save() && $account->save()) {
             return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }
