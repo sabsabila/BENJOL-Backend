@@ -117,7 +117,7 @@ class AccountController extends Controller
             $account->profile_picture = $request->profile_picture;
 
         $account->save();
-        return "data updated successfully";
+        return response()->json(['message'=>"data updated successfully"]);
     }
 
     public function destroy(){

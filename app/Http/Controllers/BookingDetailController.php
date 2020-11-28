@@ -25,7 +25,7 @@ class BookingDetailController extends Controller
         $bookingDetail->bengkel_note = $request->bengkel_note;
         $bookingDetail->service_cost = $request->service_cost;
         if ($bookingDetail->save()){
-            return response()->json([ 'message' => "Data Successfully Changed"]);
+            return response()->json([ 'message' => "Data Successfully Udated"]);
         }
     }
 
