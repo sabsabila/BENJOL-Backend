@@ -29,7 +29,7 @@ class ProgressController extends Controller
                 $estimate = $current_time->diff($end_time);
                 $minutesLeft = ($end_time->diff($current_time))->format('%H') *60 + ($end_time->diff($current_time))->format('%i');
                 $totalTime = ($end_time->diff($start_time))->format('%H') *60 + ($end_time->diff($start_time))->format('%i');
-                $progress = round(($minutesLeft / $totalTime)*100);
+                $progress = round((($totalTime - $minutesLeft) / $totalTime)*100);
 
                 if($estimate->invert == 1){
                     $estimate->h = 0;
@@ -37,11 +37,30 @@ class ProgressController extends Controller
                     $minutesLeft = 0;
                     $progress = 100;
                 }
+
+                $timeUntilService = $current_time->diff($start_time);
+                if($timeUntilService->invert == 0){
+                    $progress = 0;
+                    $estimate->h = 0;
+                    $estimate->i = 0;
+                    $minutesLeft = 0;
+                }
                 
                 $data =[
+                    $booking->start_time,
+                    $booking->end_time,
                     $percentage = strval($progress),
                     $hour = strval($estimate->h),
                     $minute = strval($estimate->i),
+                    $plate_number = $motorcycle->plate_number
+                ];
+            }else{
+                $data =[
+                    $start = null,
+                    $end = null,
+                    $percentage = null,
+                    $hour = null,
+                    $minute = null,
                     $plate_number = $motorcycle->plate_number
                 ];
             }
