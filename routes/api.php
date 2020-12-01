@@ -107,6 +107,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         // otak atik pickup
         Route::put('/pickup/{id}', 'PickupController@update');
+        Route::get('myPickups','PickupController@showMyPickups' );
 
         //booking
         Route::get('myBooking','BookingController@showMyBooking' );

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pickup;
 use App\Models\Booking;
+use Illuminate\Support\Facades\DB;
 
 class PickupController extends Controller
 {
@@ -62,6 +63,21 @@ class PickupController extends Controller
             $pickup = null;
         }
         return response()->json([ 'pickup' => $pickup]);
+    }
+
+    public function showMyPickups(){
+        $bengkel = auth('api')->account()->bengkel;
+        $booking = DB::table('pickups')
+        ->select('bookings.booking_id','bookings.repairment_date', 'users.user_id', 'users.first_name', 'users.last_name', 'pickups.pickup_location', 'pickups.dropoff_location', 'pickups.status')
+        ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
+        ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->join('users', 'bookings.user_id', 'users.user_id')
+        ->join('services', 'booking_details.service_id', 'services.service_id')
+        ->where('bookings.bengkel_id', $bengkel->bengkel_id )
+        ->orderBy('bookings.repairment_date', 'asc')
+        ->get();
+
+        return response()->json(['pickups' => $booking]);
     }
 
     /**
