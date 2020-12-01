@@ -56,6 +56,9 @@ class SparepartController extends Controller
     public function mySparepartList(){
         $bengkel = auth('api')->account()->bengkel;
         $result = $bengkel->sparepart;
+        // $spareparts = DB::table('spareparts')
+        // ->select('spareparts.sparepart_id', 'spareparts.name', 'spareparts.price', 'spareparts.stock')
+        // ->where('spareparts.bengkel_id', $bengkel->bengkel_id)->get();
 
         return response()->json(['spareparts' => $result]);
     }
