@@ -31,6 +31,17 @@ class UserController extends Controller
         return response()->json(['users' => $data]);
     }
 
+    public function seeUser($id)
+    {
+        $data = DB::table('users')
+        ->select('users.first_name', 'users.last_name','accounts.phone_number')
+        ->join('accounts', 'users.account_id', 'accounts.id')
+        ->where('users.user_id', $id)
+        ->get();
+
+        return response()->json(['users' => $data]);
+    }
+
     public function edit($id)
     {
         //

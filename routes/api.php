@@ -93,6 +93,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //otak atik sparepart
         Route::get('mySpareparts', 'SparepartController@mySparepartList');
+        Route::get('sparepart/{id}', 'SparepartController@show');
         Route::post('sparepart', 'SparepartController@store');
         Route::put('/sparepart/{id}', 'SparepartController@update');
         Route::delete('/sparepart/{id}', 'SparepartController@destroy');
@@ -113,6 +114,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
         Route::get('myBookingDetail','BookingController@showInBengkel');
+
+        //user
+        Route::get('userInfo/{id}','API\UserController@seeUser' );
     });
 
     
