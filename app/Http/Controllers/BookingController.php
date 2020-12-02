@@ -137,7 +137,8 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $booking = Booking::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $booking = Booking::where('booking_id',$id)
+                    ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;

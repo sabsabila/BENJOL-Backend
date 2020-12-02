@@ -61,12 +61,17 @@ class PaymentController extends Controller
 
     public function showBengkelPayment()
     {
-        $bookings = auth('api')->account()->bengkel->booking;
-        $data = array();
-        foreach($bookings as $booking){
-            $data = $booking->payment;
-        }
-        return response()->json(['payment' => $data]);
+        
+        $data = DB::table('bookings')
+        ->select('payments.*','bookings.repairment_date', 'booking_details.service_cost', 'booking_details.repairment_note','booking_details.bengkel_note', 'users.first_name', 'users.last_name', 'services.service_name')
+        ->join('payments', 'payments.booking_id', 'bookings.booking_id')
+        ->join('users', 'bookings.user_id', 'users.user_id')
+        ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
+        ->join('services', 'booking_details.service_id', 'services.service_id')
+        ->where('bookings.bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->orderBy('payment_id', 'desc')
+        ->first();
+        return response()->json(['payments' => $data]);
     }
 
     public function show($id){
