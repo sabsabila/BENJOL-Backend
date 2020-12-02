@@ -137,7 +137,8 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $booking = Booking::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $booking = Booking::where('booking_id',$id)
+                    ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
         
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
@@ -154,12 +155,15 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        $booking = Booking::find($id)->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+        $booking = Booking::where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+                    ->where('booking_id', $id)->first();
         $bookingDetail = BookingDetail::where('booking_id', $booking->booking_id);
+        $pickup_id = $booking->pickup_id;
         Payment::where('booking_id', $booking->booking_id)->delete();
         $bookingDetail->delete();
         if ($booking->delete()){
-            return response()->json(['message' => "Booking with id " . (int) $id . " successfully deleted "]);
+            Pickup::where('pickup_id', $pickup_id)->delete();
+            return response()->json(['message' => "Data successfully deleted "]);
         }
     }
 }

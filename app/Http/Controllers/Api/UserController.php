@@ -36,10 +36,11 @@ class UserController extends Controller
         $data = DB::table('users')
         ->select('users.first_name', 'users.last_name','accounts.phone_number')
         ->join('accounts', 'users.account_id', 'accounts.id')
-        ->where('users.user_id', $id)
-        ->get();
+        ->join('bookings', 'users.user_id', 'bookings.user_id')
+        ->where('bookings.booking_id', $id)
+        ->first();
 
-        return response()->json(['users' => $data]);
+        return response()->json(['user' => $data]);
     }
 
     public function edit($id)
