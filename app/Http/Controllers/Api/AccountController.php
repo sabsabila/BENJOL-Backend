@@ -41,6 +41,10 @@ class AccountController extends Controller
                 'token' => $token->accessToken
             ]);
 
+        }else{
+            return response()->json([
+                'message' => "Wrong e-mail or password",
+            ], 401);
         }
     }
 
@@ -98,6 +102,10 @@ class AccountController extends Controller
     public function update(Request $request)
     {
         $account = Auth::account();
+        if($account->bengkel != null)
+            $role = "bengkel";
+        else
+            $role = "user";
 
         if($request->username != null)
             $account->username = $request->username;
@@ -110,9 +118,6 @@ class AccountController extends Controller
 
         if($request->phone_number != null)
             $account->phone_number = $request->phone_number;
-
-        if($request->profile_picture != null)
-            $account->profile_picture = $request->profile_picture;
 
         $account->save();
         return response()->json(['message'=>"data updated successfully"]);
