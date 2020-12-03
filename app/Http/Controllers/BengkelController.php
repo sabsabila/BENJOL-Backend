@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Bengkel;
 use Illuminate\Support\Facades\DB;
+use Validator;
+use File;
 
 class BengkelController extends Controller
 {
@@ -77,8 +79,20 @@ class BengkelController extends Controller
         if ($request->phone_number != null)
             $account->phone_number = $request->phone_number;
 
-        if ($request->profile_picture != null)
-            $account->profile_picture = $request->profile_picture;
+        if($request->profile_picture != null){
+            $validator = Validator::make($request->all(), [
+                'profile_picture' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if($validator->fails()){
+                return response()->json(['message' => $validator->errors()->toJson()]);
+            }
+            $file = $request->file('profile_picture');
+            $path = 'upload\\bengkel\\' . basename( $_FILES['profile_picture']['name']);
+            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
+            if($account->profile_picture != null)
+                File::delete($account->profile_picture);   
+            $account->profile_picture = $path;
+        }
         
         if ($bengkel->save() && $account->save()) {
             return response()->json([ 'message' => "Data Successfully Updated"]);
