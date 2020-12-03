@@ -6,6 +6,8 @@ use App\Models\Sparepart;
 use App\Models\Bengkel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Validator;
+use File;
 
 class SparepartController extends Controller
 {
@@ -97,8 +99,19 @@ class SparepartController extends Controller
         $sparepart->name = $request->name;
         $sparepart->price = $request->price;
         $sparepart->stock = $request->stock;
-        if($request->picture != null)
-            $sparepart->picture = $request->picture;
+        if($request->picture != null){
+            $validator = Validator::make($request->all(), [
+                'picture' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if($validator->fails()){
+                return response()->json(['message' => $validator->errors()->toJson()]);
+            }
+            $file = $request->file('picture');
+            $upload_dest = 'upload\\sparepart\\' . basename( $_FILES['picture']['name']);
+            move_uploaded_file($_FILES['picture']['tmp_name'], $upload_dest);
+            
+            $sparepart->picture = $upload_dest;
+        }
 
         if ($sparepart->save()) {
             return response()->json([ 'message' => "Data Successfully Added"]);
@@ -149,8 +162,20 @@ class SparepartController extends Controller
         if ($request->stock != null)
             $sparepart->stock = $request->stock;
 
-        if($request->picture != null)
-            $sparepart->picture = $request->picture;
+        if($request->picture != null){
+            $validator = Validator::make($request->all(), [
+                'picture' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if($validator->fails()){
+                return response()->json(['message' => $validator->errors()->toJson()]);
+            }
+            $file = $request->file('picture');
+            $upload_dest = 'upload\\sparepart\\' . basename( $_FILES['picture']['name']);
+            move_uploaded_file($_FILES['picture']['tmp_name'], $upload_dest);
+            if($sparepart->picture != null)
+                File::delete($sparepart->picture);   
+            $sparepart->picture = $upload_dest;
+        }
         
         if ($sparepart->save()) {
             return response()->json([ 'message' => "Data Successfully Updated"]);

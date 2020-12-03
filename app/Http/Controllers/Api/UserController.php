@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 //use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-//use App\Models\Account;
+use Validator;
+use File;
 
 class UserController extends Controller
 {
@@ -34,7 +35,7 @@ class UserController extends Controller
     public function seeUser($id)
     {
         $data = DB::table('users')
-        ->select('users.first_name', 'users.last_name','accounts.phone_number')
+        ->select('users.first_name', 'users.last_name','accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'users.account_id', 'accounts.id')
         ->join('bookings', 'users.user_id', 'bookings.user_id')
         ->where('bookings.booking_id', $id)
@@ -94,6 +95,21 @@ class UserController extends Controller
 
         if($phone_number != null)
             $account->phone_number = $phone_number;
+        
+        if($request->profile_picture != null){
+            $validator = Validator::make($request->all(), [
+                'profile_picture' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if($validator->fails()){
+                return response()->json(['message' => $validator->errors()->toJson()]);
+            }
+            $file = $request->file('profile_picture');
+            $path = 'upload\\user\\' . basename( $_FILES['profile_picture']['name']);
+            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
+            if($account->profile_picture != null)
+                File::delete($account->profile_picture);   
+            $account->profile_picture = $path;
+        }
 
         $account->save();
         $user->save();
