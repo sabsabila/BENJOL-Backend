@@ -27,9 +27,9 @@ class UserController extends Controller
         ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
         ->join('accounts', 'users.account_id', 'accounts.id')
         ->where('accounts.id', auth('api')->account()->id)
-        ->get();
+        ->first();
 
-        return response()->json(['users' => $data]);
+        return response()->json(['user' => $data]);
     }
 
     public function seeUser($id)

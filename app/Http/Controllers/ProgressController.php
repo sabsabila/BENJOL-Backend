@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Motorcycle;
+use App\Models\Booking;
 use DateTime;
 
 class ProgressController extends Controller
@@ -13,12 +14,12 @@ class ProgressController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
+ 
      
-    public function index(){
+    public function index($id){
         $data = [];
         $user = auth('api')->account()->user;
-        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $booking = Booking::where('booking_id', $id)->where('user_id', $user->user_id)->first();
         date_default_timezone_set("Asia/Jakarta");
         $current_time = new DateTime(date("H:i:s"));
         if($booking != null){

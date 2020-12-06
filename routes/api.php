@@ -52,7 +52,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('user', 'API\UserController@update');
 
         // otak atik pickup
-        Route::get('pickup', 'PickupController@show');
+        Route::get('pickup/{id}', 'PickupController@show');
+        Route::get('allPickup', 'PickupController@showAll');
 
         //otak atik payment
         Route::put('uploadReceipt', 'PaymentController@updateReceipt');
@@ -72,7 +73,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //booking & checkprogress
         Route::post('booking','BookingController@store' );
         Route::get('booking','BookingController@userBooking');
-        Route::get('checkProgress','ProgressController@index');
+        Route::get('allBooking','BookingController@userBookingAll');
+        Route::get('checkProgress/{id}','ProgressController@index');
 
         //lihat service
         Route::get('service/{id}', 'ServiceController@show');
