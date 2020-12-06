@@ -102,7 +102,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //otak atik service
         Route::post('service', 'ServiceController@store');
         Route::put('/service/{id}', 'ServiceController@update');
-        Route::delete('/service/{id}', 'ServiceController@destroy');
+        Route::delete('/service/{id}', 'ServiceControiller@destroy');
         Route::get('service', 'ServiceController@myServices');
 
         // otak atik pickup

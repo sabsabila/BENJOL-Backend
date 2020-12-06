@@ -70,7 +70,7 @@ class PaymentController extends Controller
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', auth('api')->account()->bengkel->bengkel_id)
         ->orderBy('payment_id', 'desc')
-        ->first();
+        ->get();
         return response()->json(['payments' => $data]);
     }
 
