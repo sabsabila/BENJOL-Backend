@@ -46,14 +46,14 @@ class PaymentController extends Controller
      * @param  \App\Models\Payment  $payment
      * @return \Illuminate\Http\Response
      */
-    public function showMyPayment()
+    public function showMyPayment($id)
     {
         $data = DB::table('bookings')
         ->select('payments.*','bookings.repairment_date', 'booking_details.service_cost', 'booking_details.repairment_note','booking_details.bengkel_note')
         ->join('payments', 'payments.booking_id', 'bookings.booking_id')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->where('bookings.user_id', auth('api')->account()->user->user_id)
-        ->orderBy('payment_id', 'desc')
+        ->where('bookings.booking_id', $id)
         ->first();
         
         return response()->json(['payment' => $data]);

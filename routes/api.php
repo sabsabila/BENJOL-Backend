@@ -57,7 +57,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //otak atik payment
         Route::put('uploadReceipt', 'PaymentController@updateReceipt');
-        Route::get('payment', 'PaymentController@showMyPayment');
+        Route::get('payment/{id}', 'PaymentController@showMyPayment');
 
         //otak atik motorcycle
         Route::get('motorcycle', 'MotorcycleController@show');
