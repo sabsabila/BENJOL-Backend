@@ -52,10 +52,10 @@ class AccountController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'username' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:accounts,email',
             'password' => 'required',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], 401);            
         }
