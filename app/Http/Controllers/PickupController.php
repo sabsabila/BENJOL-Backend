@@ -52,10 +52,10 @@ class PickupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show($id)
     {
         $user = auth('api')->account()->user;
-        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $booking = Booking::where('booking_id', $id)->where('user_id', $user->user_id)->first();
 
         if($booking != null){
             $pickup = Pickup::find($booking->pickup_id);
@@ -63,6 +63,21 @@ class PickupController extends Controller
             $pickup = null;
         }
         return response()->json([ 'pickup' => $pickup]);
+    }
+
+    public function showAll()
+    {
+        $user = auth('api')->account()->user;
+        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $pickup = DB::table('pickups')
+        ->select('bookings.booking_id','bookings.repairment_date','bengkels.name', 'pickups.pickup_location', 'pickups.dropoff_location')
+        ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
+        ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
+        ->where('bookings.user_id', $user->user_id )
+        ->orderBy('bookings.repairment_date', 'asc')
+        ->get();
+
+        return response()->json([ 'pickups' => $pickup]);
     }
 
     public function showMyPickups(){
