@@ -7,6 +7,7 @@ use App\Models\Bengkel;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use File;
+use Hash;
 
 class BengkelController extends Controller
 {
@@ -78,6 +79,14 @@ class BengkelController extends Controller
 
         if ($request->phone_number != null)
             $account->phone_number = $request->phone_number;
+
+        if($request->newPassword != null){
+            if(Hash::check($request->oldPassword, $account->password)){
+                $account->password = app('hash')->make($request->newPassword);
+            }else{
+                return response()->json(["message" => "Old password doesn't match"], 401);
+            }
+        }
 
         if($request->profile_picture != null){
             $validator = Validator::make($request->all(), [
