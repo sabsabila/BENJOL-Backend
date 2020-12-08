@@ -24,9 +24,9 @@ Route::post('searchBengkel', 'BengkelController@findByName');
 Route::get('sparepart', 'SparepartController@index');
 Route::post('searchSparepart', 'SparepartController@findByName');
 
-Route::post('login', 'API\AccountController@login');
-Route::post('registerUser', 'API\AccountController@registerUser');
-Route::post('registerBengkel', 'API\AccountController@registerBengkel');
+Route::post('login', 'Api\AccountController@login');
+Route::post('registerUser', 'Api\AccountController@registerUser');
+Route::post('registerBengkel', 'Api\AccountController@registerBengkel');
 
 //buat udah login
 Route::middleware(['auth:api', 'role'])->group(function() {
@@ -38,8 +38,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('logout', 'Api\AccountController@logout');
         
         //edit & delete account
-        Route::put('account', 'API\AccountController@update');
-        Route::delete('account', 'API\AccountController@destroy');
+        Route::put('account', 'Api\AccountController@update');
+        Route::delete('account', 'Api\AccountController@destroy');
         
         Route::get('motorcycle/{id}', 'MotorcycleController@findById');
         
@@ -48,8 +48,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
     // buat user 
     Route::middleware(['scope:user'])->group(function () {
         //otak atik user
-        Route::get('user', 'API\UserController@show');
-        Route::put('user', 'API\UserController@update');
+        Route::get('user', 'Api\UserController@show');
+        Route::put('user', 'Api\UserController@update');
 
         // otak atik pickup
         Route::get('pickup/{id}', 'PickupController@show');
