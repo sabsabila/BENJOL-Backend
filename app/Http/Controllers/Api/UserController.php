@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use File;
+use Hash;
 
 class UserController extends Controller
 {
@@ -65,36 +66,37 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $gender = $request->gender;
-        $birth_date = $request->birth_date;
-        $email = $request->email;
-        $username = $request->username;
-        $phone_number = $request->phone_number;
         $account = auth('api')->account();
         $user = $account->user;
         
-        if($first_name != null)
-            $user->first_name = $first_name;
+        if($request->first_name != null)
+            $user->first_name = $request->first_name;
         
-        if($last_name != null)
-            $user->last_name = $last_name;
+        if($request->last_name != null)
+            $user->last_name = $request->last_name;
 
-        if($gender != null)
-            $user->gender = $gender;
+        if($request->gender != null)
+            $user->gender = $request->gender;
 
-        if($birth_date != null)
-            $user->birth_date = $birth_date;
+        if($request->birth_date != null)
+            $user->birth_date = $request->birth_date;
         
-        if($email != null)
-            $account->email = $email;
+        if($request->email != null)
+            $account->email = $request->email;
 
-        if($username != null)
-            $account->username = $username;
+        if($request->username != null)
+            $account->username = $request->username;
 
-        if($phone_number != null)
-            $account->phone_number = $phone_number;
+        if($request->phone_number != null)
+            $account->phone_number = $request->phone_number;
+
+        if($request->newPassword != null){
+            if(Hash::check($request->oldPassword, $account->password)){
+                $account->password = app('hash')->make($request->newPassword);
+            }else{
+                return response()->json(["message" => "Old password doesn't match"], 401);
+            }
+        }
         
         if($request->profile_picture != null){
             $validator = Validator::make($request->all(), [
