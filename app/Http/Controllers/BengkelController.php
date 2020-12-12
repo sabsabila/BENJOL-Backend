@@ -19,17 +19,6 @@ class BengkelController extends Controller
         return response()->json(['bengkel' => $bengkels]);
     }
 
-    public function store(Request $request) {
-        $bengkel = new Bengkel;
-        $bengkel->account_id = $request->account_id;
-        $bengkel->name = $request->name;
-        $bengkel->address = $request->address;
-
-        if ($bengkel->save()) {
-            return response()->json([ 'message' => "Data Successfully Added"]);
-        }
-    }
-
     public function findByName(Request $request){
         $name = $request->name;
         $bengkels = DB::table('bengkels')
@@ -105,14 +94,6 @@ class BengkelController extends Controller
         
         if ($bengkel->save() && $account->save()) {
             return response()->json([ 'message' => "Data Successfully Updated"]);
-        }
-    }
-
-    public function delete() {
-        $bengkel = auth('api')->account()->bengkel;
-        
-        if ($bengkel->delete()) {
-            return response()->json([ 'message' => "successfully deleted"]);
         }
     }
 }
