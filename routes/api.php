@@ -33,15 +33,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
     // buat user & bengkel
     Route::middleware(['scope:user,bengkel'])->group(function () {
-        //account detail & logout
-        Route::get('account', 'Api\AccountController@details');
+        //logout
         Route::post('logout', 'Api\AccountController@logout');
-        
-        //edit & delete account
-        Route::put('account', 'Api\AccountController@update');
-        Route::delete('account', 'Api\AccountController@destroy');
-        
-        Route::get('motorcycle/{id}', 'MotorcycleController@findById');
         
     });
 
@@ -64,6 +57,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('motorcycle', 'MotorcycleController@store');
         Route::put('motorcycle/{id}', 'MotorcycleController@update');
         Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
+        Route::get('motorcycle/{id}', 'MotorcycleController@findById');
 
         //search
         Route::get('sparepartBengkel/{id}', 'SparepartController@findByBengkel');
@@ -78,9 +72,6 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //lihat service
         Route::get('service/{id}', 'ServiceController@show');
-
-        //see booking detail
-        Route::get('bookingDetail','BookingDetailController@show');
     });
 
     // buat bengkel
@@ -116,10 +107,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('booking/{id}','BookingController@update' );
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
-        Route::get('myBookingDetail','BookingController@showInBengkel');
 
         //user
-        Route::get('userInfo/{id}','API\UserController@seeUser' );
+        Route::get('userInfo/{id}','Api\UserController@seeUser' );
     });
 
     

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-//use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -13,15 +12,6 @@ use Hash;
 
 class UserController extends Controller
 {
-    public function index(){
-        return User::all();
-    }
-
-    public function create()
-    {
-        
-    }
-
     public function show()
     {
         $data = DB::table('users')
@@ -43,25 +33,6 @@ class UserController extends Controller
         ->first();
 
         return response()->json(['user' => $data]);
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function store(Request $request){
-        $user = new User;
-        $account = auth('api')->account();
-
-        $user->account_id = $account->id;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->gender = $request->gender;
-        $user->birth_date = $request->birth_date;
-        $user->save();
-
-        return response()->json([ 'message' => "Data added successfully"]);
     }
 
     public function update(Request $request)
@@ -116,12 +87,5 @@ class UserController extends Controller
         $account->save();
         $user->save();
         return response()->json([ 'message' => "Data updated successfully"]);
-    }
-
-    public function destroy(){
-        $user = User::where('account_id', auth('api')->account()->id)->delete();
-        //$user->delete();
-
-        return response()->json([ 'message' =>  "Data deleted successfully"]);
     }
 }

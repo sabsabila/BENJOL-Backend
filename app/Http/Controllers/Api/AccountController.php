@@ -24,7 +24,6 @@ class AccountController extends Controller
         if( Auth::attempt(['email'=>request('email'), 'password'=>request('password')]) ) {
 
             $account = Auth::Account();
-            //$userRole = $user->role()->first();
             
             if($account->bengkel != null)
                 $userRole = 'bengkel';
@@ -99,43 +98,7 @@ class AccountController extends Controller
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
-    public function update(Request $request)
-    {
-        $account = Auth::account();
-        if($account->bengkel != null)
-            $role = "bengkel";
-        else
-            $role = "user";
-
-        if($request->username != null)
-            $account->username = $request->username;
-        
-        if($request->password != null)
-            $account->password = $request->password;
-
-        if($request->email != null)
-            $account->email = $request->email;
-
-        if($request->phone_number != null)
-            $account->phone_number = $request->phone_number;
-
-        $account->save();
-        return response()->json(['message'=>"data updated successfully"]);
-    }
-
-    public function destroy(){
-        $account = Auth::account();
-        if($account->user != null){
-            $account->user->delete();
-        }else{
-            $account->bengkel->delete();
-        }$account->delete();
-
-        return response()->json([
-            'message' => "data deleted successfully"
-        ]);
-    }
-
+    
     public function logout(Request $request)
     {
         $logout = $request->account()->token()->revoke();
@@ -146,9 +109,4 @@ class AccountController extends Controller
         }
     }
 
-    public function details()
-    {
-        $account = Auth::account();
-        return response()->json(['success' => $account], $this->successStatus);
-    }
 }
