@@ -4,32 +4,23 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-//use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use File;
+use Hash;
 
 class UserController extends Controller
 {
-    public function index(){
-        return User::all();
-    }
-
-    public function create()
-    {
-        
-    }
-
     public function show()
     {
         $data = DB::table('users')
         ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
         ->join('accounts', 'users.account_id', 'accounts.id')
         ->where('accounts.id', auth('api')->account()->id)
-        ->get();
+        ->first();
 
-        return response()->json(['users' => $data]);
+        return response()->json(['user' => $data]);
     }
 
     public function seeUser($id)
@@ -44,57 +35,39 @@ class UserController extends Controller
         return response()->json(['user' => $data]);
     }
 
-    public function edit($id)
-    {
-        //
-    }
-
-    public function store(Request $request){
-        $user = new User;
-        $account = auth('api')->account();
-
-        $user->account_id = $account->id;
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->gender = $request->gender;
-        $user->birth_date = $request->birth_date;
-        $user->save();
-
-        return response()->json([ 'message' => "Data added successfully"]);
-    }
-
     public function update(Request $request)
     {
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $gender = $request->gender;
-        $birth_date = $request->birth_date;
-        $email = $request->email;
-        $username = $request->username;
-        $phone_number = $request->phone_number;
         $account = auth('api')->account();
         $user = $account->user;
         
-        if($first_name != null)
-            $user->first_name = $first_name;
+        if($request->first_name != null)
+            $user->first_name = $request->first_name;
         
-        if($last_name != null)
-            $user->last_name = $last_name;
+        if($request->last_name != null)
+            $user->last_name = $request->last_name;
 
-        if($gender != null)
-            $user->gender = $gender;
+        if($request->gender != null)
+            $user->gender = $request->gender;
 
-        if($birth_date != null)
-            $user->birth_date = $birth_date;
+        if($request->birth_date != null)
+            $user->birth_date = $request->birth_date;
         
-        if($email != null)
-            $account->email = $email;
+        if($request->email != null)
+            $account->email = $request->email;
 
-        if($username != null)
-            $account->username = $username;
+        if($request->username != null)
+            $account->username = $request->username;
 
-        if($phone_number != null)
-            $account->phone_number = $phone_number;
+        if($request->phone_number != null)
+            $account->phone_number = $request->phone_number;
+
+        if($request->newPassword != null){
+            if(Hash::check($request->oldPassword, $account->password)){
+                $account->password = app('hash')->make($request->newPassword);
+            }else{
+                return response()->json(["message" => "Old password doesn't match"], 401);
+            }
+        }
         
         if($request->profile_picture != null){
             $validator = Validator::make($request->all(), [
@@ -114,12 +87,5 @@ class UserController extends Controller
         $account->save();
         $user->save();
         return response()->json([ 'message' => "Data updated successfully"]);
-    }
-
-    public function destroy(){
-        $user = User::where('account_id', auth('api')->account()->id)->delete();
-        //$user->delete();
-
-        return response()->json([ 'message' =>  "Data deleted successfully"]);
     }
 }

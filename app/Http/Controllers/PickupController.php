@@ -9,53 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class PickupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return response()->json(['pickups' => Pickup::all()]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $pickup = new Pickup;
-        $pickup->pickup_location = $request->pickup_location;
-        $pickup->dropoff_location = $request->dropoff_location;
-        //$pickup->status = $request->status;
-        if($pickup->save()){
-            return response()->json([ 'message' => "Data Successfully Added"]);
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
+    public function show($id)
     {
         $user = auth('api')->account()->user;
-        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $booking = Booking::where('booking_id', $id)->where('user_id', $user->user_id)->first();
 
         if($booking != null){
             $pickup = Pickup::find($booking->pickup_id);
@@ -63,6 +20,21 @@ class PickupController extends Controller
             $pickup = null;
         }
         return response()->json([ 'pickup' => $pickup]);
+    }
+
+    public function showAll()
+    {
+        $user = auth('api')->account()->user;
+        $booking = $user->booking->sortByDesc('booking_id')->first();
+        $pickup = DB::table('pickups')
+        ->select('bookings.booking_id','bookings.repairment_date','bengkels.name', 'pickups.pickup_location', 'pickups.dropoff_location')
+        ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
+        ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
+        ->where('bookings.user_id', $user->user_id )
+        ->orderBy('bookings.repairment_date', 'asc')
+        ->get();
+
+        return response()->json([ 'pickups' => $pickup]);
     }
 
     public function showMyPickups(){
@@ -80,24 +52,6 @@ class PickupController extends Controller
         return response()->json(['pickups' => $booking]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $booking = Booking::find($id);
@@ -105,20 +59,6 @@ class PickupController extends Controller
         $pickup->status = $request->status;
         if($pickup->save()){
             return response()->json([ 'message' => "Data Successfully Updated"]);
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $pickup = Pickup::find($id);
-        if($pickup->delete()){
-            return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
     }
 }

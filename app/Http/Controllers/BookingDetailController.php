@@ -28,24 +28,4 @@ class BookingDetailController extends Controller
             return response()->json([ 'message' => "Data Successfully Udated"]);
         }
     }
-
-    public function show()
-    {
-        $bookingDetails = auth('api')->account()
-                        ->user->booking->sortByDesc('booking_id')
-                        ->first()->bookingDetail;
-
-        return response()->json(['bookingDetail' => $bookingDetails]);
-    }
-
-    public function showInBengkel()
-    {
-        $bookings = auth('api')->account()
-                        ->bengkel->booking;
-        $data = array();
-        foreach($bookings as $booking){
-            $data = $booking->bookingDetail;
-        }
-        return response()->json(['bookingDetails' => $data]);
-    }
 }

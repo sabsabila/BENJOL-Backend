@@ -7,6 +7,7 @@ use App\Models\Bengkel;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use File;
+use Hash;
 
 class BengkelController extends Controller
 {
@@ -16,17 +17,6 @@ class BengkelController extends Controller
         ->join('accounts', 'bengkels.account_id', 'accounts.id')->get();
 
         return response()->json(['bengkel' => $bengkels]);
-    }
-
-    public function store(Request $request) {
-        $bengkel = new Bengkel;
-        $bengkel->account_id = $request->account_id;
-        $bengkel->name = $request->name;
-        $bengkel->address = $request->address;
-
-        if ($bengkel->save()) {
-            return response()->json([ 'message' => "Data Successfully Added"]);
-        }
     }
 
     public function findByName(Request $request){
@@ -79,6 +69,14 @@ class BengkelController extends Controller
         if ($request->phone_number != null)
             $account->phone_number = $request->phone_number;
 
+        if($request->newPassword != null){
+            if(Hash::check($request->oldPassword, $account->password)){
+                $account->password = app('hash')->make($request->newPassword);
+            }else{
+                return response()->json(["message" => "Old password doesn't match"], 401);
+            }
+        }
+
         if($request->profile_picture != null){
             $validator = Validator::make($request->all(), [
                 'profile_picture' => 'image|mimes:jpeg,png,jpg|max:2048',
@@ -96,14 +94,6 @@ class BengkelController extends Controller
         
         if ($bengkel->save() && $account->save()) {
             return response()->json([ 'message' => "Data Successfully Updated"]);
-        }
-    }
-
-    public function delete() {
-        $bengkel = auth('api')->account()->bengkel;
-        
-        if ($bengkel->delete()) {
-            return response()->json([ 'message' => "successfully deleted"]);
         }
     }
 }
