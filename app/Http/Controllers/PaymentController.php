@@ -14,7 +14,7 @@ class PaymentController extends Controller
         ->select('payments.*','bookings.repairment_date', 'booking_details.service_cost', 'booking_details.repairment_note','booking_details.bengkel_note')
         ->join('payments', 'payments.booking_id', 'bookings.booking_id')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
-        ->where('bookings.user_id', auth('api')->account()->user->user_id)
+        ->where('bookings.user_id', auth('api')->user()->client->user_id)
         ->where('bookings.booking_id', $id)
         ->first();
         
@@ -30,7 +30,7 @@ class PaymentController extends Controller
         ->join('users', 'bookings.user_id', 'users.user_id')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
-        ->where('bookings.bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->where('bookings.bengkel_id', auth('api')->user()->bengkel->bengkel_id)
         ->orderBy('bookings.repairment_date', 'asc')
         ->get();
         return response()->json(['payments' => $data]);
@@ -49,7 +49,7 @@ class PaymentController extends Controller
 
     public function updateReceipt(Request $request)
     {
-        $booking = auth('api')->account()->user->booking->sortByDesc('booking_id')->first();
+        $booking = auth('api')->user()->client->booking->sortByDesc('booking_id')->first();
         $payment = $booking->payment;
         $payment->receipt = $request->receipt;
         

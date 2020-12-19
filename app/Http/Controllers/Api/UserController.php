@@ -5,87 +5,104 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Models\Client;
+use App\Models\Bengkel;
+use Illuminate\Support\Facades\Auth;
 use Validator;
-use File;
-use Hash;
 
 class UserController extends Controller
 {
-    public function show()
+    public $successStatus = 200;
+
+    public function login()
     {
-        $data = DB::table('users')
-        ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
-        ->join('accounts', 'users.account_id', 'accounts.id')
-        ->where('accounts.id', auth('api')->account()->id)
-        ->first();
-
-        return response()->json(['user' => $data]);
-    }
-
-    public function seeUser($id)
-    {
-        $data = DB::table('users')
-        ->select('users.first_name', 'users.last_name','accounts.phone_number', 'accounts.profile_picture')
-        ->join('accounts', 'users.account_id', 'accounts.id')
-        ->join('bookings', 'users.user_id', 'bookings.user_id')
-        ->where('bookings.booking_id', $id)
-        ->first();
-
-        return response()->json(['user' => $data]);
-    }
-
-    public function update(Request $request)
-    {
-        $account = auth('api')->account();
-        $user = $account->user;
         
-        if($request->first_name != null)
-            $user->first_name = $request->first_name;
-        
-        if($request->last_name != null)
-            $user->last_name = $request->last_name;
+        if( Auth::attempt(['email'=>request('email'), 'password'=>request('password')]) ) {
 
-        if($request->gender != null)
-            $user->gender = $request->gender;
+            $user = Auth::User();
+            
+            if($user->bengkel != null)
+                $userRole = 'bengkel';
+            else
+                $userRole = 'user';
 
-        if($request->birth_date != null)
-            $user->birth_date = $request->birth_date;
-        
-        if($request->email != null)
-            $account->email = $request->email;
-
-        if($request->username != null)
-            $account->username = $request->username;
-
-        if($request->phone_number != null)
-            $account->phone_number = $request->phone_number;
-
-        if($request->newPassword != null){
-            if(Hash::check($request->oldPassword, $account->password)){
-                $account->password = app('hash')->make($request->newPassword);
-            }else{
-                return response()->json(["message" => "Old password doesn't match"], 401);
+            if ($userRole) {
+                $this->scope = $userRole;
             }
-        }
-        
-        if($request->profile_picture != null){
-            $validator = Validator::make($request->all(), [
-                'profile_picture' => 'image|mimes:jpeg,png,jpg|max:2048',
+
+            $token = $user->createToken($user->email.'-'.now(), [$this->scope]);
+
+            return response()->json([
+                'token' => $token->accessToken
             ]);
-            if($validator->fails()){
-                return response()->json(['message' => $validator->errors()->toJson()]);
-            }
-            $file = $request->file('profile_picture');
-            $path = 'upload\\user\\' . basename( $_FILES['profile_picture']['name']);
-            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
-            if($account->profile_picture != null)
-                File::delete($account->profile_picture);   
-            $account->profile_picture = $path;
+
+        }else{
+            return response()->json([
+                'message' => "Wrong e-mail or password",
+            ], 401);
+        }
+    }
+
+    public function registerUser(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'email' => 'required|email|unique:accounts,email',
+            'password' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);            
         }
 
-        $account->save();
-        $user->save();
-        return response()->json([ 'message' => "Data updated successfully"]);
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        $user = User::create($input);
+        $success['token'] =  $user->createToken('nApp')->accessToken;
+        $success['username'] =  $user->username;
+        $client = new Client;
+        $client->account_id = $user->id;
+        $client->first_name = $request->firstName;
+        $client->last_name = $request->lastName;
+        $client->save();
+        return response()->json(['success'=>$success], $this->successStatus);
     }
+
+    public function registerBengkel(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);            
+        }
+
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+        $user = User::create($input);
+        $success['token'] =  $user->createToken('nApp')->accessToken;
+        $success['username'] =  $user->username;
+        $bengkel = new Bengkel;
+        $bengkel->account_id = $user->id;
+        $bengkel->name = $request->name;
+        $bengkel->address = $request->address;
+        $bengkel->save();
+
+        return response()->json(['success'=>$success], $this->successStatus);
+    }
+
+    
+    public function logout(Request $request)
+    {
+        $logout = $request->user()->token()->revoke();
+        if($logout){
+            return response()->json([
+                'message' => 'Successfully logged out'
+            ]);
+        }
+    }
+
 }
