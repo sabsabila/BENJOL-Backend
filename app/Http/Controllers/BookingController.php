@@ -7,7 +7,7 @@ use App\Models\Booking;
 use App\Models\Service;
 use App\Models\BookingDetail;
 use App\Models\Bengkel;
-use App\Models\User;
+use App\Models\Client;
 use App\Models\Motorcycle;
 use App\Models\Pickup;
 use App\Models\Payment;
@@ -18,24 +18,24 @@ class BookingController extends Controller
     private $bookingDetailController;
     
     public function userBooking(){
-        $user = auth('api')->account()->user;
+        $client = auth('api')->user()->client;
         $booking = DB::table('bookings')
         ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
-        ->where('bookings.user_id', $user->user_id )
+        ->where('bookings.user_id', $client->user_id )
         ->orderBy('bookings.booking_id', 'desc')
         ->first();
         return response()->json(['booking' => $booking]);
     }
 
     public function userBookingAll(){
-        $user = auth('api')->account()->user;
+        $client = auth('api')->user()->client;
         $booking = DB::table('bookings')
         ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
-        ->where('bookings.user_id', $user->user_id )
+        ->where('bookings.user_id', $client->user_id )
         ->orderBy('bookings.booking_id', 'desc')
         ->get();
         return response()->json(['bookings' => $booking]);
@@ -46,7 +46,7 @@ class BookingController extends Controller
         $booking = new Booking();
         $bookingDetailController = new BookingDetailController();
       
-        $booking->user_id = auth('api')->account()->user->user_id;
+        $booking->user_id = auth('api')->user()->client->user_id;
         $motorcycle_id = $request->motorcycle_id;  
         $booking->motorcycle_id = $motorcycle_id;
 
@@ -78,7 +78,7 @@ class BookingController extends Controller
     }
 
     public function showMyBooking(){
-        $bengkel = auth('api')->account()->bengkel;
+        $bengkel = auth('api')->user()->bengkel;
         $booking = DB::table('bookings')
         ->select('bookings.booking_id','bookings.repairment_date','bookings.start_time', 'bookings.end_time', 'booking_details.repairment_note', 'users.user_id', 'users.first_name', 'users.last_name', 'services.service_name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
@@ -94,7 +94,7 @@ class BookingController extends Controller
     public function update(Request $request, $id)
     {
         $booking = Booking::where('booking_id',$id)
-                    ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+                    ->where('bengkel_id', auth('api')->user()->bengkel->bengkel_id)->first();
         
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
@@ -105,7 +105,7 @@ class BookingController extends Controller
 
     public function destroy($id)
     {
-        $booking = Booking::where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        $booking = Booking::where('bengkel_id', auth('api')->user()->bengkel->bengkel_id)
                     ->where('booking_id', $id)->first();
         $bookingDetail = BookingDetail::where('booking_id', $booking->booking_id);
         $pickup_id = $booking->pickup_id;

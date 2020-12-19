@@ -14,19 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('bengkelList', 'BengkelController@index');
 Route::post('searchBengkel', 'BengkelController@findByName');
 
 Route::get('sparepart', 'SparepartController@index');
 Route::post('searchSparepart', 'SparepartController@findByName');
 
-Route::post('login', 'Api\AccountController@login');
-Route::post('registerUser', 'Api\AccountController@registerUser');
-Route::post('registerBengkel', 'Api\AccountController@registerBengkel');
+Route::post('login', 'Api\UserController@login');
+Route::post('registerUser', 'Api\UserController@registerUser');
+Route::post('registerBengkel', 'Api\UserController@registerBengkel');
 
 //buat udah login
 Route::middleware(['auth:api', 'role'])->group(function() {
@@ -34,15 +30,15 @@ Route::middleware(['auth:api', 'role'])->group(function() {
     // buat user & bengkel
     Route::middleware(['scope:user,bengkel'])->group(function () {
         //logout
-        Route::post('logout', 'Api\AccountController@logout');
+        Route::post('logout', 'Api\UserController@logout');
         
     });
 
     // buat user 
     Route::middleware(['scope:user'])->group(function () {
         //otak atik user
-        Route::get('user', 'Api\UserController@show');
-        Route::put('user', 'Api\UserController@update');
+        Route::get('user', 'Api\ClientController@show');
+        Route::put('user', 'Api\ClientController@update');
 
         // otak atik pickup
         Route::get('pickup/{id}', 'PickupController@show');
@@ -109,7 +105,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('bookingDetail/{id}','BookingDetailController@update');
 
         //user
-        Route::get('userInfo/{id}','Api\UserController@seeUser' );
+        Route::get('userInfo/{id}','Api\ClientController@seeUser' );
     });
 
     

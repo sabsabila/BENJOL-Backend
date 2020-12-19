@@ -17,7 +17,7 @@ class MotorcycleController extends Controller
         $motorcycle = new Motorcycle;
         $motorcycle->brand = $request->brand;
         $motorcycle->plate_number = $request->plate_number;
-        $motorcycle->user_id = auth('api')->account()->user->user_id;
+        $motorcycle->user_id = auth('api')->user()->client->user_id;
 
         if ($motorcycle->save()) {
             return response()->json(['message' => "Data Successfully Added"]);
@@ -26,7 +26,7 @@ class MotorcycleController extends Controller
 
     public function show()
     {
-        return response()->json(['motorcycles' => auth('api')->account()->user->motorcycle]);
+        return response()->json(['motorcycles' => auth('api')->user()->client->motorcycle]);
     }
 
     public function findById($id)
@@ -36,7 +36,7 @@ class MotorcycleController extends Controller
 
     public function update(Request $request, $id)
     {
-        $motorcycle = Motorcycle::where('user_id', auth('api')->account()->user->user_id)
+        $motorcycle = Motorcycle::where('user_id', auth('api')->user()->client->user_id)
                                     ->where('motorcycle_id', $id)->first();
 
         if ($request->brand != null)
@@ -52,7 +52,7 @@ class MotorcycleController extends Controller
 
     public function destroy($id)
     {
-        $motorcycle = Motorcycle::where('user_id', auth('api')->account()->user->user_id)
+        $motorcycle = Motorcycle::where('user_id', auth('api')->user()->client->user_id)
                                     ->where('motorcycle_id', $id)->first();
 
         if ($motorcycle->delete()) {
