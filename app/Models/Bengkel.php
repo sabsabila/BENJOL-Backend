@@ -15,9 +15,9 @@ class Bengkel extends Model
     
     use HasFactory;
 
-    public function account()
+    public function user()
     {
-        return $this->belongsTo('App\Models\Account', 'account_id', 'id');
+        return $this->belongsTo('App\Models\User', 'account_id', 'id');
     }
 
     public function sparepart()
