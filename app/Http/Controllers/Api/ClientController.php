@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use File;
 use Hash;
@@ -17,7 +18,7 @@ class ClientController extends Controller
         $data = DB::table('users')
         ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
         ->join('accounts', 'users.account_id', 'accounts.id')
-        ->where('accounts.id', auth('api')->user()->id)
+        ->where('accounts.id', Auth::User()->id)
         ->first();
 
         return response()->json(['user' => $data]);
@@ -37,7 +38,7 @@ class ClientController extends Controller
 
     public function update(Request $request)
     {
-        $user = auth('api')->user();
+        $user = Auth::User();
         $client = $user->client;
         
         if($request->first_name != null)
@@ -69,6 +70,13 @@ class ClientController extends Controller
             }
         }
         
+        $user->save();
+        $client->save();
+        return response()->json([ 'message' => "Data updated successfully"]);
+    }
+
+    public function upload(Request $request){
+        $user = Auth::User();
         if($request->profile_picture != null){
             $validator = Validator::make($request->all(), [
                 'profile_picture' => 'image|mimes:jpeg,png,jpg|max:2048',
@@ -83,9 +91,7 @@ class ClientController extends Controller
                 File::delete($user->profile_picture);   
             $user->profile_picture = $path;
         }
-
-        $user->save();
-        $client->save();
-        return response()->json([ 'message' => "Data updated successfully"]);
+        if($user->save())
+            return response()->json(['message' => 'Uploaded Successfully']);
     }
 }
