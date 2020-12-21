@@ -62,6 +62,13 @@ class ClientController extends Controller
         if($request->phone_number != null)
             $user->phone_number = $request->phone_number;
 
+        $user->save();
+        $client->save();
+        return response()->json([ 'message' => "Data updated successfully"]);
+    }
+
+    public function changePassword(Request $request){
+        $user = Auth::User();
         if($request->newPassword != null){
             if(Hash::check($request->oldPassword, $user->password)){
                 $user->password = app('hash')->make($request->newPassword);
@@ -69,10 +76,8 @@ class ClientController extends Controller
                 return response()->json(["message" => "Old password doesn't match"], 401);
             }
         }
-        
         $user->save();
-        $client->save();
-        return response()->json([ 'message' => "Data updated successfully"]);
+        return response()->json([ 'message' => "Password updated successfully"]);
     }
 
     public function upload(Request $request){

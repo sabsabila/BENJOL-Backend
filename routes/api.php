@@ -39,6 +39,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //otak atik user
         Route::get('user', 'Api\ClientController@show');
         Route::put('user', 'Api\ClientController@update');
+        Route::put('user/password', 'Api\ClientController@changePassword');
         Route::post('user/image', 'Api\ClientController@upload');
 
         // otak atik pickup
