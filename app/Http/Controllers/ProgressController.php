@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Motorcycle;
 use App\Models\Booking;
+use Illuminate\Support\Facades\Auth;
 use DateTime;
 
 class ProgressController extends Controller
 {
     public function index($id){
         $data = [];
-        $client = auth('api')->user()->client;
+        $client = Auth::User()->client;
         $booking = Booking::where('booking_id', $id)->where('user_id', $client->user_id)->first();
         date_default_timezone_set("Asia/Jakarta");
         $current_time = new DateTime(date("H:i:s"));

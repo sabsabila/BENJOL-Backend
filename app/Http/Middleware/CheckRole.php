@@ -15,7 +15,7 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        if($request->account()->bengkel()->first() != null){
+        if($request->user()->bengkel()->first() != null){
             $userRole = 'bengkel';
         }else{
             $userRole = 'user';
@@ -28,7 +28,6 @@ class CheckRole
                 'scope' => $userRole,
             ]);
         }
-
         return $next($request);
     }
 }
