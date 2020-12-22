@@ -6,12 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Pickup;
 use App\Models\Booking;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class PickupController extends Controller
 {
     public function show($id)
     {
-        $client = auth('api')->user()->client;
+        $client = Auth::User()->client;
         $booking = Booking::where('booking_id', $id)->where('user_id', $client->user_id)->first();
 
         if($booking != null){
@@ -24,21 +25,21 @@ class PickupController extends Controller
 
     public function showAll()
     {
-        $client = auth('api')->user()->client;
+        $client = Auth::User()->client;
         $booking = $client->booking->sortByDesc('booking_id')->first();
         $pickup = DB::table('pickups')
         ->select('bookings.booking_id','bookings.repairment_date','bengkels.name', 'pickups.pickup_location', 'pickups.dropoff_location')
         ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
         ->where('bookings.user_id', $client->user_id )
-        ->orderBy('bookings.repairment_date', 'asc')
+        ->orderBy('bookings.repairment_date', 'desc')
         ->get();
 
         return response()->json([ 'pickups' => $pickup]);
     }
 
     public function showMyPickups(){
-        $bengkel = auth('api')->user()->bengkel;
+        $bengkel = Auth::User()->bengkel;
         $booking = DB::table('pickups')
         ->select('bookings.booking_id','bookings.repairment_date', 'users.user_id', 'users.first_name', 'users.last_name', 'pickups.pickup_location', 'pickups.dropoff_location', 'pickups.status')
         ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
@@ -55,7 +56,7 @@ class PickupController extends Controller
     public function update(Request $request, $id)
     {
         $booking = Booking::where('booking_id', $id)
-        ->where('bengkel_id', auth('api')->user()->bengkel->bengkel_id)->first();
+        ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)->first();
         $pickup = Pickup::where('pickup_id', $booking->pickup_id)->first();
         $pickup->status = $request->status;
         if($pickup->save()){

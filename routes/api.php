@@ -39,13 +39,15 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //otak atik user
         Route::get('user', 'Api\ClientController@show');
         Route::put('user', 'Api\ClientController@update');
+        Route::put('user/password', 'Api\ClientController@changePassword');
+        Route::post('user/image', 'Api\ClientController@upload');
 
         // otak atik pickup
         Route::get('pickup/{id}', 'PickupController@show');
         Route::get('allPickup', 'PickupController@showAll');
 
         //otak atik payment
-        Route::put('uploadReceipt', 'PaymentController@updateReceipt');
+        Route::post('uploadReceipt/{id}', 'PaymentController@updateReceipt');
         Route::get('payment/{id}', 'PaymentController@showMyPayment');
 
         //otak atik motorcycle

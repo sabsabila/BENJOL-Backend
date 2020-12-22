@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Bengkel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use File;
 use Hash;
@@ -31,7 +32,7 @@ class BengkelController extends Controller
 
     public function show()
     {
-        $id = auth('api')->user()->bengkel->bengkel_id;
+        $id = Auth::User()->bengkel->bengkel_id;
         $bengkel = DB::table('bengkels')
         ->select('bengkels.*','accounts.username', 'accounts.email', 'accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'bengkels.account_id', 'accounts.id')
@@ -51,7 +52,7 @@ class BengkelController extends Controller
     }
 
     public function update(Request $request) {
-        $user = auth('api')->user();
+        $user = Auth::User();
         $bengkel = $user->bengkel;
       
         if ($request->name != null)
