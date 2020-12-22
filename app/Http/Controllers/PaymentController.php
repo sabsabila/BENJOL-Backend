@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Payment;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
+use Validator;
+use File;
 
 class PaymentController extends Controller
 {
@@ -48,14 +51,26 @@ class PaymentController extends Controller
         }
     }
 
-    public function updateReceipt(Request $request)
+    public function updateReceipt(Request $request, $id)
     {
-        $booking = Auth::User()->client->booking->sortByDesc('booking_id')->first();
+        $booking = Booking::where('booking_id', $id)->where('user_id', Auth::User()->client->user_id)->first();
         $payment = $booking->payment;
-        $payment->receipt = $request->receipt;
-        
-        if ($payment->save()) {
-            return response()->json([ 'message' => "Data Successfully Updated"]);
+
+        if($request->receipt != null){
+            $validator = Validator::make($request->all(), [
+                'receipt' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if($validator->fails()){
+                return response()->json(['message' => $validator->errors()->toJson()]);
+            }
+            $file = $request->file('receipt');
+            $path = 'upload\\receipt\\' . basename( $_FILES['receipt']['name']);
+            move_uploaded_file($_FILES['receipt']['tmp_name'], $path);
+            if($payment->receipt != null)
+                File::delete($payment->receipt);   
+            $payment->receipt = $path;
         }
+        if($payment->save())
+            return response()->json(['message' => 'Uploaded Successfully']);
     }
 }
