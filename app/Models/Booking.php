@@ -23,6 +23,10 @@ class Booking extends Model{
         return $this->belongsTo('App\Models\Motorcycle');
     }
 
+    public function Client() {
+        return $this->belongsTo('App\Models\Client', 'user_id', 'user_id');
+    }
+
     public function Bengkel() {
         return $this->belongsTo('App\Models\Bengkel');
     }
