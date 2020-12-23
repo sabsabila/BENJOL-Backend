@@ -104,6 +104,15 @@ class BookingController extends Controller
         }
     }
 
+    public function bookingCount(){
+        $count = DB::table('bookings')
+                ->select(DB::raw('count(*) as booking_count'))
+                ->where('bengkel_id',Auth::User()->bengkel->bengkel_id)
+                ->groupBy('bengkel_id')
+                ->first();
+        return response()->json(['count' => $count]);
+    }
+
     public function destroy($id)
     {
         $booking = Booking::where('bengkel_id', Auth::User()->bengkel->bengkel_id)
