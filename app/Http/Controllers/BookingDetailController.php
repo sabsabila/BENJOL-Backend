@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BookingDetail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BookingDetailController extends Controller
 {
@@ -27,5 +29,31 @@ class BookingDetailController extends Controller
         if ($bookingDetail->save()){
             return response()->json([ 'message' => "Data Successfully Udated"]);
         }
+    }
+
+    public function revenueCount(){
+        $count = DB::table('booking_details')
+                ->select(DB::raw('sum(booking_details.service_cost) as revenue_count'))
+                ->join('bookings', 'bookings.booking_id', 'booking_details.booking_id')
+                ->join('payments', 'payments.booking_id', 'booking_details.booking_id')
+                ->where('payments.status', 'paid')
+                ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
+                ->distinct('payments.status')
+                ->groupBy('bookings.bengkel_id')
+                ->first();
+        return response()->json(['count' => $count]);
+    }
+
+    public function unpaidServices(){
+        $count = DB::table('booking_details')
+                ->select(DB::raw('sum(booking_details.service_cost) as revenue_count'))
+                ->join('bookings', 'bookings.booking_id', 'booking_details.booking_id')
+                ->join('payments', 'payments.booking_id', 'booking_details.booking_id')
+                ->where('payments.status', 'unpaid')
+                ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
+                ->distinct('payments.status')
+                ->groupBy('bookings.bengkel_id')
+                ->first();
+        return response()->json(['count' => $count]);
     }
 }

@@ -105,6 +105,9 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('booking/{id}','BookingController@update' );
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
+        Route::get('booking/count', 'BookingController@bookingCount');
+        Route::get('revenue/count', 'BookingDetailController@revenueCount');
+        Route::get('revenue/unpaid', 'BookingDetailController@unpaidServices');
 
         //user
         Route::get('userInfo/{id}','Api\ClientController@seeUser' );
