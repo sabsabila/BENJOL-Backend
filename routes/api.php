@@ -14,49 +14,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get('bengkelList', 'BengkelController@index');
 Route::post('searchBengkel', 'BengkelController@findByName');
 
 Route::get('sparepart', 'SparepartController@index');
 Route::post('searchSparepart', 'SparepartController@findByName');
 
-Route::post('login', 'Api\AccountController@login');
-Route::post('registerUser', 'Api\AccountController@registerUser');
-Route::post('registerBengkel', 'Api\AccountController@registerBengkel');
+Route::post('login', 'Api\UserController@login');
+Route::post('registerUser', 'Api\UserController@registerUser');
+Route::post('registerBengkel', 'Api\UserController@registerBengkel');
 
 //buat udah login
 Route::middleware(['auth:api', 'role'])->group(function() {
 
     // buat user & bengkel
     Route::middleware(['scope:user,bengkel'])->group(function () {
-        //account detail & logout
-        Route::get('account', 'Api\AccountController@details');
-        Route::post('logout', 'Api\AccountController@logout');
-        
-        //edit & delete account
-        Route::put('account', 'Api\AccountController@update');
-        Route::delete('account', 'Api\AccountController@destroy');
-        
-        Route::get('motorcycle/{id}', 'MotorcycleController@findById');
+        //logout
+        Route::post('logout', 'Api\UserController@logout');
         
     });
 
     // buat user 
     Route::middleware(['scope:user'])->group(function () {
         //otak atik user
-        Route::get('user', 'Api\UserController@show');
-        Route::put('user', 'Api\UserController@update');
+        Route::get('user', 'Api\ClientController@show');
+        Route::put('user', 'Api\ClientController@update');
+        Route::put('user/password', 'Api\ClientController@changePassword');
+        Route::post('user/image', 'Api\ClientController@upload');
 
         // otak atik pickup
         Route::get('pickup/{id}', 'PickupController@show');
         Route::get('allPickup', 'PickupController@showAll');
 
         //otak atik payment
-        Route::put('uploadReceipt', 'PaymentController@updateReceipt');
+        Route::post('uploadReceipt/{id}', 'PaymentController@updateReceipt');
         Route::get('payment/{id}', 'PaymentController@showMyPayment');
 
         //otak atik motorcycle
@@ -64,6 +55,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::post('motorcycle', 'MotorcycleController@store');
         Route::put('motorcycle/{id}', 'MotorcycleController@update');
         Route::delete('motorcycle/{id}', 'MotorcycleController@destroy');
+        Route::get('motorcycle/{id}', 'MotorcycleController@findById');
 
         //search
         Route::get('sparepartBengkel/{id}', 'SparepartController@findByBengkel');
@@ -78,9 +70,6 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //lihat service
         Route::get('service/{id}', 'ServiceController@show');
-
-        //see booking detail
-        Route::get('bookingDetail','BookingDetailController@show');
     });
 
     // buat bengkel
@@ -116,10 +105,12 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         Route::put('booking/{id}','BookingController@update' );
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
-        Route::get('myBookingDetail','BookingController@showInBengkel');
+        Route::get('booking/count', 'BookingController@bookingCount');
+        Route::get('revenue/count', 'BookingDetailController@revenueCount');
+        Route::get('revenue/unpaid', 'BookingDetailController@unpaidServices');
 
         //user
-        Route::get('userInfo/{id}','API\UserController@seeUser' );
+        Route::get('userInfo/{id}','Api\ClientController@seeUser' );
     });
 
     

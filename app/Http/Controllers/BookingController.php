@@ -7,76 +7,47 @@ use App\Models\Booking;
 use App\Models\Service;
 use App\Models\BookingDetail;
 use App\Models\Bengkel;
-use App\Models\User;
+use App\Models\Client;
 use App\Models\Motorcycle;
 use App\Models\Pickup;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
     private $bookingDetailController;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        echo Booking::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    public function show($id)
-    {
-        return Booking::find($id);
-    }
-
+    
     public function userBooking(){
-        $user = auth('api')->account()->user;
+        $client = Auth::User()->client;
         $booking = DB::table('bookings')
         ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
-        ->where('bookings.user_id', $user->user_id )
+        ->where('bookings.user_id', $client->user_id )
         ->orderBy('bookings.booking_id', 'desc')
         ->first();
         return response()->json(['booking' => $booking]);
     }
 
     public function userBookingAll(){
-        $user = auth('api')->account()->user;
+        $client = Auth::User()->client;
         $booking = DB::table('bookings')
         ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
-        ->where('bookings.user_id', $user->user_id )
+        ->where('bookings.user_id', $client->user_id )
         ->orderBy('bookings.booking_id', 'desc')
         ->get();
         return response()->json(['bookings' => $booking]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $booking = new Booking();
         $bookingDetailController = new BookingDetailController();
       
-        $booking->user_id = auth('api')->account()->user->user_id;
+        $booking->user_id = Auth::User()->client->user_id;
         $motorcycle_id = $request->motorcycle_id;  
         $booking->motorcycle_id = $motorcycle_id;
 
@@ -108,7 +79,7 @@ class BookingController extends Controller
     }
 
     public function showMyBooking(){
-        $bengkel = auth('api')->account()->bengkel;
+        $bengkel = Auth::User()->bengkel;
         $booking = DB::table('bookings')
         ->select('bookings.booking_id','bookings.repairment_date','bookings.start_time', 'bookings.end_time', 'booking_details.repairment_note', 'users.user_id', 'users.first_name', 'users.last_name', 'services.service_name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
@@ -121,36 +92,10 @@ class BookingController extends Controller
         return response()->json(['booking' => $booking]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $booking = Booking::where('booking_id',$id)
-                    ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)->first();
+                    ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)->first();
         
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
@@ -159,15 +104,18 @@ class BookingController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function bookingCount(){
+        $count = DB::table('bookings')
+                ->select(DB::raw('count(*) as booking_count'))
+                ->where('bengkel_id',Auth::User()->bengkel->bengkel_id)
+                ->groupBy('bengkel_id')
+                ->first();
+        return response()->json(['count' => $count]);
+    }
+
     public function destroy($id)
     {
-        $booking = Booking::where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        $booking = Booking::where('bengkel_id', Auth::User()->bengkel->bengkel_id)
                     ->where('booking_id', $id)->first();
         $bookingDetail = BookingDetail::where('booking_id', $booking->booking_id);
         $pickup_id = $booking->pickup_id;

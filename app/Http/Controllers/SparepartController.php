@@ -6,16 +6,12 @@ use App\Models\Sparepart;
 use App\Models\Bengkel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use File;
 
 class SparepartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $spareparts = DB::table('spareparts')
@@ -23,16 +19,6 @@ class SparepartController extends Controller
         ->join('bengkels', 'spareparts.bengkel_id', 'bengkels.bengkel_id')->get();
 
         return response()->json(['spareparts' => $spareparts]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     public function findByName(Request $request){
@@ -56,12 +42,8 @@ class SparepartController extends Controller
     }
 
     public function mySparepartList(){
-        $bengkel = auth('api')->account()->bengkel;
+        $bengkel = Auth::User()->bengkel;
         $result = $bengkel->sparepart;
-        // $spareparts = DB::table('spareparts')
-        // ->select('spareparts.sparepart_id', 'spareparts.name', 'spareparts.price', 'spareparts.stock')
-        // ->where('spareparts.bengkel_id', $bengkel->bengkel_id)->get();
-
         return response()->json(['spareparts' => $result]);
     }
 
@@ -76,7 +58,7 @@ class SparepartController extends Controller
     }
 
     public function findByNameInBengkel(Request $request){
-        $bengkel = auth('api')->account()->bengkel;
+        $bengkel = Auth::User()->bengkel;
         $name = $request->name;
         $result = Sparepart::where('name', 'like', "%{$name}%")
                 ->where('bengkel_id', $bengkel->bengkel_id)->get();
@@ -84,16 +66,10 @@ class SparepartController extends Controller
         return response()->json(['spareparts' => $result]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $sparepart = new Sparepart();
-        $bengkel = auth('api')->account()->bengkel;
+        $bengkel = Auth::User()->bengkel;
         
         $sparepart->bengkel_id = $bengkel->bengkel_id;
         $sparepart->name = $request->name;
@@ -118,39 +94,15 @@ class SparepartController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sparepart  $sparepart
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return response()->json(['spareparts' => Sparepart::find($id)]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sparepart  $sparepart
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Sparepart $sparepart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sparepart  $sparepart
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $sparepart = Sparepart::where('sparepart_id', $id)
-        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)
         ->first();
 
         if ($request->name != null)
@@ -182,18 +134,13 @@ class SparepartController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Sparepart  $sparepart
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $sparepart = Sparepart::where('sparepart_id', $id)
-        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)
         ->first();
-
+        if($sparepart->picture != null)
+            File::delete($sparepart->picture); 
         if ($sparepart->delete()) {
             return response()->json([ 'message' => "Data Successfully Deleted"]);
         }
