@@ -80,7 +80,7 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         //otak atik payment
         Route::put('payment/status/{id}', 'PaymentController@updateStatus');
-        Route::get('payment/bengkel', 'PaymentController@showBengkelPayment');
+        Route::get('bengkelPayment', 'PaymentController@showBengkelPayment');
 
         //otak atik sparepart
         Route::get('bengkelSparepart', 'SparepartController@bengkelSparepartList');
@@ -98,16 +98,16 @@ Route::middleware(['auth:api', 'role'])->group(function() {
 
         // otak atik pickup
         Route::put('pickup/{id}', 'PickupController@update');
-        Route::get('bengkelPickups','PickupController@showBengkelPickups' );
+        Route::get('bengkelPickup','PickupController@showBengkelPickups' );
 
         //booking
         Route::get('bengkelBooking','BookingController@showBengkelBooking' );
         Route::put('booking/{id}','BookingController@update' );
+        Route::put('bookingStatus/{id}','BookingController@setBookingStatus' );
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
-        Route::get('booking/count', 'BookingController@bookingCount');
-        Route::get('revenue/count', 'BookingDetailController@revenueCount');
-        Route::get('revenue/unpaid', 'BookingDetailController@unpaidServices');
+        Route::post('booking/count', 'BookingController@bookingCount');
+        Route::post('revenue/count', 'BookingDetailController@revenueCount');
 
         //user
         Route::get('user/info/{id}','Api\ClientController@seeUser' );
