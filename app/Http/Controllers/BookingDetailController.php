@@ -31,25 +31,13 @@ class BookingDetailController extends Controller
         }
     }
 
-    public function revenueCount(){
+    public function revenueCount(Request $request){
+        $status = $request->status;
         $count = DB::table('booking_details')
                 ->select(DB::raw('sum(booking_details.service_cost) as revenue_count'))
                 ->join('bookings', 'bookings.booking_id', 'booking_details.booking_id')
                 ->join('payments', 'payments.booking_id', 'booking_details.booking_id')
-                ->where('payments.status', 'paid')
-                ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
-                ->distinct('payments.status')
-                ->groupBy('bookings.bengkel_id')
-                ->first();
-        return response()->json(['count' => $count]);
-    }
-
-    public function unpaidServices(){
-        $count = DB::table('booking_details')
-                ->select(DB::raw('sum(booking_details.service_cost) as revenue_count'))
-                ->join('bookings', 'bookings.booking_id', 'booking_details.booking_id')
-                ->join('payments', 'payments.booking_id', 'booking_details.booking_id')
-                ->where('payments.status', 'unpaid')
+                ->where('payments.status', $status)
                 ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
                 ->distinct('payments.status')
                 ->groupBy('bookings.bengkel_id')

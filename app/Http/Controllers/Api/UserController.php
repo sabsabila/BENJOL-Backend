@@ -46,9 +46,9 @@ class UserController extends Controller
     public function registerUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required',
             'email' => 'required|email|unique:accounts,email',
             'password' => 'required',
+            'phone_number' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -58,22 +58,23 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
+        $user->phone_number = $request->phone_number;
         $success['token'] =  $user->createToken('nApp')->accessToken;
-        $success['username'] =  $user->username;
+        $success['message'] =  "Registered Successfully";
         $client = new Client;
         $client->account_id = $user->id;
-        $client->first_name = $request->firstName;
-        $client->last_name = $request->lastName;
+        $client->full_name = $request->full_name;
         $client->save();
+        $user->save();
         return response()->json(['success'=>$success], $this->successStatus);
     }
 
     public function registerBengkel(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required',
             'email' => 'required|email|unique:accounts,email',
             'password' => 'required',
+            'phone_number' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -84,7 +85,7 @@ class UserController extends Controller
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
         $success['token'] =  $user->createToken('nApp')->accessToken;
-        $success['username'] =  $user->username;
+        $success['message'] =  "Registered Successfully";
         $bengkel = new Bengkel;
         $bengkel->account_id = $user->id;
         $bengkel->name = $request->name;

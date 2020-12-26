@@ -26,22 +26,21 @@ class PickupController extends Controller
     public function showAll()
     {
         $client = Auth::User()->client;
-        $booking = $client->booking->sortByDesc('booking_id')->first();
-        $pickup = DB::table('pickups')
+        $pickups = DB::table('pickups')
         ->select('bookings.booking_id','bookings.repairment_date','bengkels.name', 'pickups.pickup_location', 'pickups.dropoff_location')
         ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
-        ->where('bookings.user_id', $client->user_id )
+        ->where('bookings.user_id', $client->user_id)
         ->orderBy('bookings.repairment_date', 'desc')
         ->get();
 
-        return response()->json([ 'pickups' => $pickup]);
+        return response()->json([ 'pickups' => $pickups]);
     }
 
-    public function showMyPickups(){
+    public function showBengkelPickups(){
         $bengkel = Auth::User()->bengkel;
         $booking = DB::table('pickups')
-        ->select('bookings.booking_id','bookings.repairment_date', 'users.user_id', 'users.first_name', 'users.last_name', 'pickups.pickup_location', 'pickups.dropoff_location', 'pickups.status')
+        ->select('bookings.booking_id','bookings.repairment_date', 'users.user_id', 'users.full_name', 'pickups.pickup_location', 'pickups.dropoff_location', 'pickups.status')
         ->join('bookings', 'bookings.pickup_id', 'pickups.pickup_id')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('users', 'bookings.user_id', 'users.user_id')
