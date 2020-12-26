@@ -16,7 +16,7 @@ class ClientController extends Controller
     public function show()
     {
         $data = DB::table('users')
-        ->select('users.*','accounts.username', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
+        ->select('users.*', 'accounts.email', 'accounts.profile_picture', 'accounts.phone_number')
         ->join('accounts', 'users.account_id', 'accounts.id')
         ->where('accounts.id', Auth::User()->id)
         ->first();
@@ -27,7 +27,7 @@ class ClientController extends Controller
     public function seeUser($id)
     {
         $data = DB::table('users')
-        ->select('users.first_name', 'users.last_name','accounts.phone_number', 'accounts.profile_picture')
+        ->select('users.full_name','accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'users.account_id', 'accounts.id')
         ->join('bookings', 'users.user_id', 'bookings.user_id')
         ->where('bookings.booking_id', $id)
@@ -41,11 +41,8 @@ class ClientController extends Controller
         $user = Auth::User();
         $client = $user->client;
         
-        if($request->first_name != null)
-            $client->first_name = $request->first_name;
-        
-        if($request->last_name != null)
-            $client->last_name = $request->last_name;
+        if($request->full_name != null)
+            $client->full_name = $request->full_name;
 
         if($request->gender != null)
             $client->gender = $request->gender;
@@ -55,9 +52,6 @@ class ClientController extends Controller
         
         if($request->email != null)
             $user->email = $request->email;
-
-        if($request->username != null)
-            $user->username = $request->username;
 
         if($request->phone_number != null)
             $user->phone_number = $request->phone_number;
