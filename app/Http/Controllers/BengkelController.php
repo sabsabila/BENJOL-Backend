@@ -34,7 +34,7 @@ class BengkelController extends Controller
     {
         $id = Auth::User()->bengkel->bengkel_id;
         $bengkel = DB::table('bengkels')
-        ->select('bengkels.*','accounts.username', 'accounts.email', 'accounts.phone_number', 'accounts.profile_picture')
+        ->select('bengkels.*', 'accounts.email', 'accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'bengkels.account_id', 'accounts.id')
         ->where('bengkels.bengkel_id', $id)->first();
 
@@ -60,9 +60,6 @@ class BengkelController extends Controller
 
         if ($request->address != null)
             $bengkel->address = $request->address;
-
-        if ($request->username != null)
-            $user->username = $request->username;
 
         if ($request->email != null)
             $user->email = $request->email;

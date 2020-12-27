@@ -41,13 +41,13 @@ class SparepartController extends Controller
         return response()->json(['spareparts' => $spareparts]);
     }
 
-    public function mySparepartList(){
+    public function bengkelSparepartList(){
         $bengkel = Auth::User()->bengkel;
         $result = $bengkel->sparepart;
         return response()->json(['spareparts' => $result]);
     }
 
-    public function searchInBengkel(Request $request, $id){
+    public function searchPerBengkel(Request $request, $id){
         $name = $request->name;
         $spareparts = DB::table('spareparts')
         ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
@@ -57,7 +57,7 @@ class SparepartController extends Controller
         return response()->json(['spareparts' => $spareparts]);
     }
 
-    public function findByNameInBengkel(Request $request){
+    public function searchInBengkel(Request $request){
         $bengkel = Auth::User()->bengkel;
         $name = $request->name;
         $result = Sparepart::where('name', 'like', "%{$name}%")
