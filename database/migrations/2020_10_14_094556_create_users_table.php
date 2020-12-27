@@ -16,8 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->integer('user_id', true);
             $table->integer('account_id')->index('accountuser_id_fk');
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
+            $table->string('full_name')->nullable();
             $table->string('gender')->nullable();
             $table->date('birth_date')->nullable();
         });

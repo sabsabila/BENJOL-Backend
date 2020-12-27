@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Motorcycle;
 use App\Models\Booking;
+use Illuminate\Support\Facades\Auth;
 use DateTime;
 
 class ProgressController extends Controller
 {
     public function index($id){
         $data = [];
-        $user = auth('api')->account()->user;
-        $booking = Booking::where('booking_id', $id)->where('user_id', $user->user_id)->first();
+        $client = Auth::User()->client;
+        $booking = Booking::where('booking_id', $id)->where('user_id', $client->user_id)->first();
         date_default_timezone_set("Asia/Jakarta");
         $current_time = new DateTime(date("H:i:s"));
         if($booking != null){
@@ -46,7 +47,8 @@ class ProgressController extends Controller
                     $percentage = strval($progress),
                     $hour = strval($estimate->h),
                     $minute = strval($estimate->i),
-                    $plate_number = $motorcycle->plate_number
+                    $plate_number = $motorcycle->plate_number,
+                    $booking->status
                 ];
             }else{
                 $data =[
@@ -55,7 +57,8 @@ class ProgressController extends Controller
                     $percentage = null,
                     $hour = null,
                     $minute = null,
-                    $plate_number = $motorcycle->plate_number
+                    $plate_number = $motorcycle->plate_number,
+                    $booking->status
                 ];
             }
         }else{

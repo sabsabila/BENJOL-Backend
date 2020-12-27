@@ -6,6 +6,7 @@ use App\Models\Sparepart;
 use App\Models\Bengkel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use File;
 
@@ -40,13 +41,13 @@ class SparepartController extends Controller
         return response()->json(['spareparts' => $spareparts]);
     }
 
-    public function mySparepartList(){
-        $bengkel = auth('api')->account()->bengkel;
+    public function bengkelSparepartList(){
+        $bengkel = Auth::User()->bengkel;
         $result = $bengkel->sparepart;
         return response()->json(['spareparts' => $result]);
     }
 
-    public function searchInBengkel(Request $request, $id){
+    public function searchPerBengkel(Request $request, $id){
         $name = $request->name;
         $spareparts = DB::table('spareparts')
         ->select('spareparts.*','bengkels.name as bengkel', 'bengkels.address')
@@ -56,8 +57,8 @@ class SparepartController extends Controller
         return response()->json(['spareparts' => $spareparts]);
     }
 
-    public function findByNameInBengkel(Request $request){
-        $bengkel = auth('api')->account()->bengkel;
+    public function searchInBengkel(Request $request){
+        $bengkel = Auth::User()->bengkel;
         $name = $request->name;
         $result = Sparepart::where('name', 'like', "%{$name}%")
                 ->where('bengkel_id', $bengkel->bengkel_id)->get();
@@ -68,7 +69,7 @@ class SparepartController extends Controller
     public function store(Request $request)
     {
         $sparepart = new Sparepart();
-        $bengkel = auth('api')->account()->bengkel;
+        $bengkel = Auth::User()->bengkel;
         
         $sparepart->bengkel_id = $bengkel->bengkel_id;
         $sparepart->name = $request->name;
@@ -101,7 +102,7 @@ class SparepartController extends Controller
     public function update(Request $request, $id)
     {
         $sparepart = Sparepart::where('sparepart_id', $id)
-        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)
         ->first();
 
         if ($request->name != null)
@@ -136,7 +137,7 @@ class SparepartController extends Controller
     public function destroy($id)
     {
         $sparepart = Sparepart::where('sparepart_id', $id)
-        ->where('bengkel_id', auth('api')->account()->bengkel->bengkel_id)
+        ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)
         ->first();
         if($sparepart->picture != null)
             File::delete($sparepart->picture); 

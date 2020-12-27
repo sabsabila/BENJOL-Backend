@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Bengkel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 use File;
 use Hash;
@@ -31,9 +32,9 @@ class BengkelController extends Controller
 
     public function show()
     {
-        $id = auth('api')->account()->bengkel->bengkel_id;
+        $id = Auth::User()->bengkel->bengkel_id;
         $bengkel = DB::table('bengkels')
-        ->select('bengkels.*','accounts.username', 'accounts.email', 'accounts.phone_number', 'accounts.profile_picture')
+        ->select('bengkels.*', 'accounts.email', 'accounts.phone_number', 'accounts.profile_picture')
         ->join('accounts', 'bengkels.account_id', 'accounts.id')
         ->where('bengkels.bengkel_id', $id)->first();
 
@@ -51,8 +52,8 @@ class BengkelController extends Controller
     }
 
     public function update(Request $request) {
-        $account = auth('api')->account();
-        $bengkel = $account->bengkel;
+        $user = Auth::User();
+        $bengkel = $user->bengkel;
       
         if ($request->name != null)
             $bengkel->name = $request->name;
@@ -60,18 +61,15 @@ class BengkelController extends Controller
         if ($request->address != null)
             $bengkel->address = $request->address;
 
-        if ($request->username != null)
-            $account->username = $request->username;
-
         if ($request->email != null)
-            $account->email = $request->email;
+            $user->email = $request->email;
 
         if ($request->phone_number != null)
-            $account->phone_number = $request->phone_number;
+            $user->phone_number = $request->phone_number;
 
         if($request->newPassword != null){
-            if(Hash::check($request->oldPassword, $account->password)){
-                $account->password = app('hash')->make($request->newPassword);
+            if(Hash::check($request->oldPassword, $user->password)){
+                $user->password = app('hash')->make($request->newPassword);
             }else{
                 return response()->json(["message" => "Old password doesn't match"], 401);
             }
@@ -87,12 +85,12 @@ class BengkelController extends Controller
             $file = $request->file('profile_picture');
             $path = 'upload\\bengkel\\' . basename( $_FILES['profile_picture']['name']);
             move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
-            if($account->profile_picture != null)
-                File::delete($account->profile_picture);   
-            $account->profile_picture = $path;
+            if($user->profile_picture != null)
+                File::delete($user->profile_picture);   
+            $user->profile_picture = $path;
         }
         
-        if ($bengkel->save() && $account->save()) {
+        if ($bengkel->save() && $user->save()) {
             return response()->json([ 'message' => "Data Successfully Updated"]);
         }
     }

@@ -2,33 +2,51 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    public $timestamps = false;
+    use HasApiTokens, Notifiable;
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $table = 'accounts';
 
-    protected $primaryKey = 'user_id';
-
-    public function account()
+    public function client()
     {
-        return $this->belongsTo('App\Models\Account', 'account_id', 'id');
+        return $this->hasOne('App\Models\Client', 'account_id', 'id');
     }
 
-    public function motorcycle()
+    public function bengkel()
     {
-        return $this->hasMany('App\Models\Motorcycle', 'user_id', 'user_id');
+        return $this->hasOne('App\Models\Bengkel', 'account_id', 'id');
     }
 
-    public function booking()
-    {
-        return $this->hasMany('App\Models\Booking', 'user_id', 'user_id');
-    }
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'username', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }
