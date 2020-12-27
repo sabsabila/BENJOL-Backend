@@ -25,6 +25,7 @@ class BookingController extends Controller
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
         ->where('bookings.user_id', $client->user_id )
+        ->where('bookings.status', '!=', 'canceled')
         ->orderBy('bookings.booking_id', 'desc')
         ->first();
         return response()->json(['booking' => $booking]);
@@ -86,6 +87,7 @@ class BookingController extends Controller
         ->join('users', 'bookings.user_id', 'users.user_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
+        ->orderBy('bookings.status', 'desc')
         ->orderBy('bookings.repairment_date', 'asc')
         ->get();
 

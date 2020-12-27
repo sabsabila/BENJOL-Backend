@@ -47,6 +47,7 @@ class PickupController extends Controller
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
         ->orderBy('bookings.repairment_date', 'asc')
+        ->orderBy('pickups.status', 'desc')
         ->get();
 
         return response()->json(['pickups' => $booking]);
