@@ -29,12 +29,13 @@ class PaymentController extends Controller
     {
         
         $data = DB::table('bookings')
-        ->select('payments.*','bookings.repairment_date', 'booking_details.service_cost', 'booking_details.repairment_note','booking_details.bengkel_note', 'users.first_name', 'users.last_name', 'services.service_name')
+        ->select('payments.*','bookings.repairment_date', 'booking_details.service_cost', 'booking_details.repairment_note','booking_details.bengkel_note', 'users.full_name', 'services.service_name')
         ->join('payments', 'payments.booking_id', 'bookings.booking_id')
         ->join('users', 'bookings.user_id', 'users.user_id')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
+        ->orderBy('payments.status', 'desc')
         ->orderBy('bookings.repairment_date', 'asc')
         ->get();
         return response()->json(['payments' => $data]);
@@ -69,6 +70,7 @@ class PaymentController extends Controller
             if($payment->receipt != null)
                 File::delete($payment->receipt);   
             $payment->receipt = $path;
+            $payment->status = "pending";
         }
         if($payment->save())
             return response()->json(['message' => 'Uploaded Successfully']);

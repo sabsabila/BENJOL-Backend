@@ -15,7 +15,6 @@ class CreateAccountsTable extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->integer('id', true);
-            $table->string('username');
             $table->string('password');
             $table->string('email');
             $table->timestamp('email_verified_at')->useCurrent();

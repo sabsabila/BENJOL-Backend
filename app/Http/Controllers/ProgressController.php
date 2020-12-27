@@ -47,7 +47,8 @@ class ProgressController extends Controller
                     $percentage = strval($progress),
                     $hour = strval($estimate->h),
                     $minute = strval($estimate->i),
-                    $plate_number = $motorcycle->plate_number
+                    $plate_number = $motorcycle->plate_number,
+                    $booking->status
                 ];
             }else{
                 $data =[
@@ -56,7 +57,8 @@ class ProgressController extends Controller
                     $percentage = null,
                     $hour = null,
                     $minute = null,
-                    $plate_number = $motorcycle->plate_number
+                    $plate_number = $motorcycle->plate_number,
+                    $booking->status
                 ];
             }
         }else{

@@ -21,10 +21,11 @@ class BookingController extends Controller
     public function userBooking(){
         $client = Auth::User()->client;
         $booking = DB::table('bookings')
-        ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
+        ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bookings.status', 'bengkels.name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
         ->where('bookings.user_id', $client->user_id )
+        ->where('bookings.status', '!=', 'canceled')
         ->orderBy('bookings.booking_id', 'desc')
         ->first();
         return response()->json(['booking' => $booking]);
@@ -33,7 +34,7 @@ class BookingController extends Controller
     public function userBookingAll(){
         $client = Auth::User()->client;
         $booking = DB::table('bookings')
-        ->select('bookings.booking_id','bookings.repairment_date','booking_details.repairment_note', 'bengkels.name')
+        ->select('bookings.booking_id','bookings.repairment_date','bookings.status', 'booking_details.repairment_note', 'bengkels.name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
         ->where('bookings.user_id', $client->user_id )
@@ -78,14 +79,15 @@ class BookingController extends Controller
             return response()->json([ 'message' => "Failed"]);
     }
 
-    public function showMyBooking(){
+    public function showBengkelBooking(){
         $bengkel = Auth::User()->bengkel;
         $booking = DB::table('bookings')
-        ->select('bookings.booking_id','bookings.repairment_date','bookings.start_time', 'bookings.end_time', 'booking_details.repairment_note', 'users.user_id', 'users.first_name', 'users.last_name', 'services.service_name')
+        ->select('bookings.booking_id','bookings.repairment_date','bookings.start_time', 'bookings.end_time', 'bookings.status', 'booking_details.repairment_note', 'users.user_id', 'users.full_name','services.service_name')
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('users', 'bookings.user_id', 'users.user_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
+        ->orderBy('bookings.status', 'desc')
         ->orderBy('bookings.repairment_date', 'asc')
         ->get();
 
@@ -99,15 +101,29 @@ class BookingController extends Controller
         
         $booking->start_time = $request->start_time;
         $booking->end_time = $request->end_time;
+        $booking->status = "ongoing";
         if ($booking->save()){
             return response()->json(['message' => " Data Successfully Updated"]);
         }
     }
 
-    public function bookingCount(){
+    public function setBookingStatus(Request $request, $id)
+    {
+        $booking = Booking::where('booking_id',$id)
+                    ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)->first();
+        
+        $booking->status = $request->status;
+        if ($booking->save()){
+            return response()->json(['message' => " Data Successfully Updated"]);
+        }
+    }
+
+    public function bookingCount(Request $request){
+        $status = $request->status;
         $count = DB::table('bookings')
                 ->select(DB::raw('count(*) as booking_count'))
                 ->where('bengkel_id',Auth::User()->bengkel->bengkel_id)
+                ->where('bookings.status', $status)
                 ->groupBy('bengkel_id')
                 ->first();
         return response()->json(['count' => $count]);
