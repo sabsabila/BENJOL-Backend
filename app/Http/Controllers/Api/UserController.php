@@ -84,6 +84,8 @@ class UserController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
+        $user->phone_number = $request->phone_number;
+        $user->save();
         $success['token'] =  $user->createToken('nApp')->accessToken;
         $success['message'] =  "Registered Successfully";
         $bengkel = new Bengkel;
