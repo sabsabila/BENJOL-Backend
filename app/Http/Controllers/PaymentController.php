@@ -35,8 +35,8 @@ class PaymentController extends Controller
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
-        ->orderBy('payments.status', 'desc')
-        ->orderBy('bookings.repairment_date', 'asc')
+        ->orderBy('bookings.repairment_date', 'desc')
+        ->orderBy('payments.payment_id', 'desc')
         ->get();
         return response()->json(['payments' => $data]);
     }

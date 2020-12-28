@@ -32,6 +32,8 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //logout
         Route::post('logout', 'Api\UserController@logout');
         
+        //status booking
+        Route::put('bookingStatus/{id}','BookingController@setBookingStatus' );
     });
 
     // buat user 
@@ -103,7 +105,6 @@ Route::middleware(['auth:api', 'role'])->group(function() {
         //booking
         Route::get('bengkelBooking','BookingController@showBengkelBooking' );
         Route::put('booking/{id}','BookingController@update' );
-        Route::put('bookingStatus/{id}','BookingController@setBookingStatus' );
         Route::delete('booking/{id}','BookingController@destroy');
         Route::put('bookingDetail/{id}','BookingDetailController@update');
         Route::post('booking/count', 'BookingController@bookingCount');
