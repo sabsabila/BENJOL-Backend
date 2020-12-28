@@ -88,7 +88,7 @@ class BookingController extends Controller
         ->join('users', 'bookings.user_id', 'users.user_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
-        ->orderBy('bookings.repairment_date', 'asc')
+        ->orderBy('bookings.repairment_date', 'desc')
         ->orderBy('bookings.booking_id', 'desc')
         ->get();
 
@@ -119,6 +119,7 @@ class BookingController extends Controller
                 $pickup->status = "canceled";
                 $pickup->save();
             }
+            Payment::Where('booking_id', $booking->booking_id)->first()->delete();
         }
 
         if ($booking->save()){

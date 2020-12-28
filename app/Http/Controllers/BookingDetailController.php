@@ -39,9 +39,12 @@ class BookingDetailController extends Controller
                 ->join('payments', 'payments.booking_id', 'booking_details.booking_id')
                 ->where('payments.status', $status)
                 ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
-                ->distinct('payments.status')
                 ->groupBy('bookings.bengkel_id')
                 ->first();
+        if($count != null){
+            if($count->revenue_count == null)
+                $count = null;
+        }
         return response()->json(['count' => $count]);
     }
 }
