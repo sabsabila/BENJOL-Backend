@@ -32,6 +32,7 @@ class PickupController extends Controller
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
         ->where('bookings.user_id', $client->user_id)
         ->orderBy('bookings.repairment_date', 'desc')
+        ->orderBy('pickups.pickup_id', 'desc')
         ->get();
 
         return response()->json([ 'pickups' => $pickups]);
@@ -47,7 +48,7 @@ class PickupController extends Controller
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
         ->orderBy('bookings.repairment_date', 'asc')
-        ->orderBy('pickups.status', 'desc')
+        ->orderBy('pickups.pickup_id', 'desc')
         ->get();
 
         return response()->json(['pickups' => $booking]);
