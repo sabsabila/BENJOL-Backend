@@ -13,6 +13,7 @@ use App\Models\Pickup;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon;
 
 class BookingController extends Controller
 {
@@ -128,11 +129,16 @@ class BookingController extends Controller
     }
 
     public function bookingCount(Request $request){
+        $month = Carbon::now()->format('m');
+        $year = Carbon::now()->format('Y');
+
         $status = $request->status;
         $count = DB::table('bookings')
                 ->select(DB::raw('count(*) as booking_count'))
                 ->where('bengkel_id',Auth::User()->bengkel->bengkel_id)
                 ->where('bookings.status', $status)
+                ->whereMonth('repairment_date', $month)
+                ->whereYear('repairment_date', $year)
                 ->groupBy('bengkel_id')
                 ->first();
         return response()->json(['count' => $count]);
