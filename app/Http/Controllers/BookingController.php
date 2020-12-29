@@ -38,6 +38,7 @@ class BookingController extends Controller
         ->join('booking_details', 'bookings.booking_id', 'booking_details.booking_id')
         ->join('bengkels', 'bookings.bengkel_id', 'bengkels.bengkel_id')
         ->where('bookings.user_id', $client->user_id )
+        ->orderBy('bookings.repairment_date', 'desc')
         ->orderBy('bookings.booking_id', 'desc')
         ->get();
         return response()->json(['bookings' => $booking]);
@@ -87,8 +88,8 @@ class BookingController extends Controller
         ->join('users', 'bookings.user_id', 'users.user_id')
         ->join('services', 'booking_details.service_id', 'services.service_id')
         ->where('bookings.bengkel_id', $bengkel->bengkel_id )
-        ->orderBy('bookings.status', 'desc')
-        ->orderBy('bookings.repairment_date', 'asc')
+        ->orderBy('bookings.repairment_date', 'desc')
+        ->orderBy('bookings.booking_id', 'desc')
         ->get();
 
         return response()->json(['booking' => $booking]);
@@ -109,10 +110,18 @@ class BookingController extends Controller
 
     public function setBookingStatus(Request $request, $id)
     {
-        $booking = Booking::where('booking_id',$id)
-                    ->where('bengkel_id', Auth::User()->bengkel->bengkel_id)->first();
+        $booking = Booking::where('booking_id',$id)->first();
         
         $booking->status = $request->status;
+        if(strcmp($booking->status, "canceled")==0){
+            if($booking->pickup_id != null){
+                $pickup = Pickup::where('pickup_id', $booking->pickup_id)->first();
+                $pickup->status = "canceled";
+                $pickup->save();
+            }
+            Payment::Where('booking_id', $booking->booking_id)->first()->delete();
+        }
+
         if ($booking->save()){
             return response()->json(['message' => " Data Successfully Updated"]);
         }
