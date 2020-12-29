@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\BookingDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon;
 
 class BookingDetailController extends Controller
 {
@@ -32,6 +33,9 @@ class BookingDetailController extends Controller
     }
 
     public function revenueCount(Request $request){
+        $month = Carbon::now()->format('m');
+        $year = Carbon::now()->format('Y');
+
         $status = $request->status;
         $count = DB::table('booking_details')
                 ->select(DB::raw('sum(booking_details.service_cost) as revenue_count'))
@@ -39,6 +43,8 @@ class BookingDetailController extends Controller
                 ->join('payments', 'payments.booking_id', 'booking_details.booking_id')
                 ->where('payments.status', $status)
                 ->where('bookings.bengkel_id', Auth::User()->bengkel->bengkel_id)
+                ->whereMonth('bookings.repairment_date', $month)
+                ->whereYear('bookings.repairment_date', $year)
                 ->groupBy('bookings.bengkel_id')
                 ->first();
         if($count != null){
