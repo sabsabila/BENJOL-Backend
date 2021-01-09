@@ -83,7 +83,7 @@ class BengkelController extends Controller
                 return response()->json(['message' => $validator->errors()->toJson()]);
             }
             $file = $request->file('profile_picture');
-            $path = 'upload\\bengkel\\' . basename( $_FILES['profile_picture']['name']);
+            $path = 'upload/bengkel/' . basename( $_FILES['profile_picture']['name']);
             move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
             if($user->profile_picture != null)
                 File::delete($user->profile_picture);   

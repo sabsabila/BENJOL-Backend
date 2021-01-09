@@ -83,7 +83,7 @@ class SparepartController extends Controller
                 return response()->json(['message' => $validator->errors()->toJson()]);
             }
             $file = $request->file('picture');
-            $upload_dest = 'upload\\sparepart\\' . basename( $_FILES['picture']['name']);
+            $upload_dest = 'upload/sparepart/' . basename( $_FILES['picture']['name']);
             move_uploaded_file($_FILES['picture']['tmp_name'], $upload_dest);
             
             $sparepart->picture = $upload_dest;
