@@ -65,7 +65,7 @@ class PaymentController extends Controller
                 return response()->json(['message' => $validator->errors()->toJson()]);
             }
             $file = $request->file('receipt');
-            $path = 'upload\\receipt\\' . basename( $_FILES['receipt']['name']);
+            $path = 'upload/receipt/' . basename( $_FILES['receipt']['name']);
             move_uploaded_file($_FILES['receipt']['tmp_name'], $path);
             if($payment->receipt != null)
                 File::delete($payment->receipt);   
