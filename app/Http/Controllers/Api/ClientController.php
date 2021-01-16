@@ -85,9 +85,9 @@ class ClientController extends Controller
             }
             $file = $request->file('profile_picture');
             $path = 'upload/user/' . basename( $_FILES['profile_picture']['name']);
-            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
             if($user->profile_picture != null)
-                File::delete($user->profile_picture);   
+                File::delete($user->profile_picture);
+            move_uploaded_file($_FILES['profile_picture']['tmp_name'], $path);
             $user->profile_picture = $path;
         }
         if($user->save())
