@@ -66,9 +66,9 @@ class PaymentController extends Controller
             }
             $file = $request->file('receipt');
             $path = 'upload/receipt/' . basename( $_FILES['receipt']['name']);
-            move_uploaded_file($_FILES['receipt']['tmp_name'], $path);
             if($payment->receipt != null)
                 File::delete($payment->receipt);   
+            move_uploaded_file($_FILES['receipt']['tmp_name'], $path);
             $payment->receipt = $path;
             $payment->status = "pending";
         }
